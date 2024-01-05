@@ -44,6 +44,10 @@ h1 {
     margin-bottom: 2px;
 }
 
+#form select {
+    margin-bottom: 2px;
+}
+
 #form input[type='number']{
     width: 40px;
 } 
