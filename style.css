@@ -27,25 +27,21 @@ h1 {
 
 #form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-bottom: 5px;
 }
 
-#inputLables {
-    text-align: right;
-}
-
-#form p {
-    margin: 0px;
+.formInputDiv{
+    display: flex;
+    flex-direction: row;
     margin-bottom: 4px;
 }
 
-#form input {
-    margin-bottom: 2px;
-}
-
-#form select {
-    margin-bottom: 2px;
+#form p {
+    text-align: right;
+    margin: 0px;
+    margin-top: -2px;
+    width: 160px;
 }
 
 #form input[type='number']{
