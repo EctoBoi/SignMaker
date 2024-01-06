@@ -16,6 +16,16 @@
         <button class="button-87" role="button" id="fillInfoButton">Fill From Info</button>
 
         <div id="form">
+            <div class="formInputDiv" id="formSignType">
+                <p>Sign Type:</p>
+                <select id="sizes">
+                    <option value="2x4 Hang Tag">2x4 Hang Tag</option>
+                    <option value="3x5 Hang Tag">3x5 Hang Tag</option>
+                    <option value="4x4 Fact Tag" selected="selected">4x4 Fact Tag</option>
+                    <option value="11x11 Sign Insert">11x11 Sign Insert</option>
+                    <option value="17x17 Sign Insert">17x17 Sign Insert</option>
+                </select>
+            </div>
             <div class="formInputDiv" id="formTitle1">
                 <p>Title 1:</p>
                 <input type="text" id="title1" size="35">
@@ -40,16 +50,6 @@
                 <p>Sale End Date:</p>
                 <input type="date" id="endDate" placeholder="MON DD, YYYY" size="15">
             </div>
-            <div class="formInputDiv" id="formSignType">
-                <p>Sign Type:</p>
-                <select id="sizes">
-                    <option value="2x4 Hang Tag">2x4 Hang Tag</option>
-                    <option value="3x5 Hang Tag">3x5 Hang Tag</option>
-                    <option value="4x4 Fact Tag" selected="selected">4x4 Fact Tag</option>
-                    <option value="11x11 Sign Insert">11x11 Sign Insert</option>
-                    <option value="17x17 Sign Insert">17x17 Sign Insert</option>
-                </select>
-            </div>
             <div class="formInputDiv" id="formCopies">
                 <p>Copies:</p>
                 <input type="number" id="copies" value=1>
@@ -61,9 +61,6 @@
 
         <div id="canvasDiv"></div>
         <div id="barcodeDiv"></div>
-
-
-
     </div>
 
     <script src="JsBarcode.all.min.js"></script>
