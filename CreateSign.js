@@ -452,6 +452,157 @@ function create4x4FactTag() {
     document.getElementById("printButton").style.visibility = "visible"
 }
 
+function create4x2Binocular() {
+    if (document.getElementById("signCanvas"))
+        document.getElementById("signCanvas").remove()
+
+    const canvasWidth = xToPx("4.5in")
+    const canvasHeight = xToPx("2.70in")
+    const font = "Impact"
+    const title1 = document.getElementById("title1").value
+    //const title2 = document.getElementById("title2").value
+    const price = document.getElementById("price").value
+    const dollars = price.split(".")[0].replace(/,/g, "")
+    const cents = price.split(".")[1] === undefined ? "" : price.split(".")[1]
+    const sku = document.getElementById("sku").value
+    const regPrice = document.getElementById("regPrice").value
+
+    let endDate = ""
+    if (document.getElementById("endDate").value !== "") {
+        const formDate = new Date(document.getElementById("endDate").value.replace("-", "/"));
+        const month = formDate.toLocaleString('default', { month: 'short' });
+        endDate = month + " " + formDate.getDate() + ", " + formDate.getFullYear()
+    }
+
+    let c = createHiDPICanvas(canvasWidth, canvasHeight, canvasRatio);
+    c.id = "signCanvas";
+    document.getElementById("canvasDiv").appendChild(c);
+
+    const ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = "4";
+    ctx.textBaseline = "alphabetic";
+
+    //border
+    ctx.beginPath();
+    ctx.moveTo(xToPx("10mm"), 0);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(0, xToPx("10mm"));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(xToPx("10mm"), canvasHeight);
+    ctx.lineTo(0, canvasHeight);
+    ctx.lineTo(0, canvasHeight - xToPx("10mm"));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvasWidth - xToPx("10mm"), 0);
+    ctx.lineTo(canvasWidth, 0);
+    ctx.lineTo(canvasWidth, xToPx("10mm"));
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(canvasWidth - xToPx("10mm"), canvasHeight);
+    ctx.lineTo(canvasWidth, canvasHeight);
+    ctx.lineTo(canvasWidth, canvasHeight - xToPx("10mm"));
+    ctx.stroke();
+
+    //text1
+    ctx.font = xToPx("8mm") + "px " + font;
+    ctx.fillText(title1, (canvasWidth / 2) - (ctx.measureText(title1).width / 2), xToPx("36mm"));
+
+    //text2
+    //ctx.font = xToPx("9mm") + "px " + font;
+    //ctx.fillText(title2, (canvasWidth / 2) - (ctx.measureText(title2).width / 2), xToPx("21mm"));
+
+    //price
+    let priceWidth = 0
+    let dollarsWidth = 0
+    let dollorsSize = xToPx("24mm")
+    let centsWidth = 0
+    let centsSize = xToPx("12mm")
+
+    ctx.font = dollorsSize + "px " + font;
+    dollarsWidth = ctx.measureText(dollars).width
+    priceWidth += dollarsWidth
+    ctx.font = centsSize + "px " + font;
+    centsWidth = ctx.measureText(cents).width
+    priceWidth += centsWidth
+
+    let priceOffset = -1
+
+    for (let i = 0; priceWidth > canvasWidth - xToPx("65mm"); i++) {
+        dollorsSize--
+        centsSize--
+        priceOffset++
+        priceWidth = 0
+        ctx.font = dollorsSize + "px " + font;
+        dollarsWidth = ctx.measureText(dollars).width
+        priceWidth += dollarsWidth
+        ctx.font = centsSize + "px " + font;
+        centsWidth = ctx.measureText(cents).width
+        priceWidth += centsWidth
+    }
+
+    priceOffset = priceOffset / 2
+
+    //dollor
+    ctx.font = dollorsSize + "px " + font;
+    ctx.fillText(dollars, xToPx("80mm") - (priceWidth / 2), xToPx("57mm") - priceOffset);
+
+    //cent
+    ctx.font = centsSize + "px " + font;
+    ctx.fillText(cents, xToPx("80mm") + (priceWidth / 2) - centsWidth, xToPx("49mm") - priceOffset);
+
+    //sale ends
+    function saleEnds() {
+        if (endDate !== "") {
+            ctx.font = xToPx("3.5mm") + "px " + font;
+            ctx.fillText("Sale Ends " + endDate, (canvasWidth / 2) - (ctx.measureText("Sale Ends " + endDate).width / 2), xToPx("62mm"));
+        }
+    }
+
+    //sku
+    if (document.getElementById("barcode"))
+        document.getElementById("barcode").remove()
+
+    if (sku !== "") {
+        let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.id = "barcode"
+        document.getElementById("barcodeDiv").append(svg)
+
+        JsBarcode("#barcode", parseInt(sku), {
+            width: 1,
+            height: 8,
+            margin: 0,
+            textMargin: 0,
+            fontSize: 13,
+        });
+        let xml = new XMLSerializer().serializeToString(svg);
+        let base64 = 'data:image/svg+xml;base64,' + btoa(xml);
+        let img = new Image();
+        img.src = base64;
+
+        img.onload = function() {
+            ctx.drawImage(img, xToPx("20mm") - (img.width / 2), xToPx("60mm"))
+
+            saleEnds()
+        }
+    } else {
+        saleEnds()
+    }
+
+    //reg
+    if (regPrice !== "") {
+        ctx.font = xToPx("4mm") + "px " + font;
+        ctx.fillText("Reg. $" + regPrice, xToPx("77mm"), xToPx("62mm"));
+    }
+
+    document.getElementById("printButton").style.visibility = "visible"
+}
+
 function create11x11SignInsert() {
     if (document.getElementById("signCanvas"))
         document.getElementById("signCanvas").remove()
@@ -734,4 +885,4 @@ function xToPx(x) {
     return px;
 }
 
-export { create2x4HangTag, create3x5HangTag, create4x4FactTag, create11x11SignInsert, create17x17SignInsert };
+export { create2x4HangTag, create3x5HangTag, create4x4FactTag, create4x2Binocular, create11x11SignInsert, create17x17SignInsert };

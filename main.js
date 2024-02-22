@@ -1,4 +1,4 @@
-import { create2x4HangTag, create3x5HangTag, create4x4FactTag, create11x11SignInsert, create17x17SignInsert } from './CreateSign.js';
+import { create2x4HangTag, create3x5HangTag, create4x4FactTag, create4x2Binocular, create11x11SignInsert, create17x17SignInsert } from './CreateSign.js';
 
 document.getElementById("createButton").addEventListener("click", createSign)
 document.getElementById("printButton").addEventListener("click", print)
@@ -34,7 +34,7 @@ function createSign() {
         create2x4HangTag()
     }
 
-    if (size === "3x5 Hang Tag") {
+    if (size === "3.25x5.75 Hang Tag") {
         pageOrientation = "portrait"
         create3x5HangTag()
     }
@@ -42,6 +42,11 @@ function createSign() {
     if (size === "4x4 Fact Tag") {
         pageOrientation = "portrait"
         create4x4FactTag()
+    }
+
+    if (size === "4.5x2.75 Binocular") {
+        pageOrientation = "landscape"
+        create4x2Binocular()
     }
 
     if (size === "11x11 Sign Insert") {
