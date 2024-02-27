@@ -1,6 +1,12 @@
 
 const canvasRatio = 4 //resolution
 
+function showPrintControls() {
+    document.getElementById("printButton").style.visibility = "visible"
+    document.getElementById("saveToBatch").style.visibility = "visible"
+    document.getElementById("clearBatch").style.visibility = "visible"
+    document.getElementById("printBatch").style.visibility = "visible"
+}
 
 function create2x4HangTag() {
     if (document.getElementById("signCanvas"))
@@ -151,7 +157,7 @@ function create2x4HangTag() {
         ctx.fillText("Reg. $" + regPrice, (canvasWidth / 2) - (ctx.measureText("Reg. $" + regPrice).width / 2), xToPx("39mm"))
     }
 
-    document.getElementById("printButton").style.visibility = "visible"
+    showPrintControls()
 }
 
 function create3x5HangTag() {
@@ -300,7 +306,7 @@ function create3x5HangTag() {
         ctx.fillText("Reg. $" + regPrice, (canvasWidth / 2) - (ctx.measureText("Reg. $" + regPrice).width / 2), xToPx("58mm"))
     }
 
-    document.getElementById("printButton").style.visibility = "visible"
+    showPrintControls()
 }
 
 function create4x4FactTag() {
@@ -449,7 +455,7 @@ function create4x4FactTag() {
         ctx.fillText("Reg. $" + regPrice, xToPx("10mm"), xToPx("87mm"));
     }
 
-    document.getElementById("printButton").style.visibility = "visible"
+    showPrintControls()
 }
 
 function create4x2Binocular() {
@@ -600,7 +606,7 @@ function create4x2Binocular() {
         ctx.fillText("Reg. $" + regPrice, xToPx("77mm"), xToPx("62mm"));
     }
 
-    document.getElementById("printButton").style.visibility = "visible"
+    showPrintControls()
 }
 
 function create11x11SignInsert() {
@@ -724,7 +730,7 @@ function create11x11SignInsert() {
         ctx.fillText("Reg. $" + regPrice, (canvasWidth / 2) - (ctx.measureText("Reg. $" + regPrice).width / 2), xToPx("177mm") - o);
     }
 
-    document.getElementById("printButton").style.visibility = "visible"
+    showPrintControls()
 }
 
 function create17x17SignInsert() {
@@ -849,7 +855,7 @@ function create17x17SignInsert() {
         ctx.fillText("Reg. $" + regPrice, (canvasWidth / 2) - (ctx.measureText("Reg. $" + regPrice).width / 2), xToPx("221mm") - o);
     }
 
-    document.getElementById("printButton").style.visibility = "visible"
+    showPrintControls()
 }
 
 let PIXEL_RATIO = (function() {

@@ -4,7 +4,13 @@ document.getElementById("createButton").addEventListener("click", createSign)
 document.getElementById("printButton").addEventListener("click", print)
 document.getElementById("fillInfoButton").addEventListener("click", fillFromInfo)
 
+document.getElementById("saveToBatch").addEventListener("click", saveToBatch)
+document.getElementById("clearBatch").addEventListener("click", clearBatch)
+document.getElementById("printBatch").addEventListener("click", printBatch)
+
 let pageOrientation = "portrait"
+
+let batch = []
 
 async function fillFromInfo() {
     const clipboardContents = await navigator.clipboard.readText();
@@ -20,7 +26,7 @@ async function fillFromInfo() {
         }
 
         document.getElementById("title2").value = ""
-        document.getElementById("endDate").value = ""
+        //document.getElementById("endDate").value = ""
     } else {
         alert("Info Error")
     }
@@ -67,19 +73,56 @@ function print() {
     img.width = img.width * 0.25;
     img.height = img.height * 0.25;
 
-    if (img.complete)
-        openPrintWindow(img)
-    else
+    if (img.complete) {
+        const copies = document.getElementById("copies").value
+        let imgs = []
+        for (let i = 0; i < copies; i++) {
+            imgs.push(img)
+        }
+        openPrintWindow(imgs)
+    }
+    else {
         setTimeout(print, 300)
+    }
 }
 
-function openPrintWindow(img) {
+function saveToBatch() {
+    let img = new Image();
+    img.id = 'tempPrintImage'
+    img.src = document.getElementById("signCanvas").toDataURL("image/png");
+    img.width = img.width * 0.25;
+    img.height = img.height * 0.25;
+
+    if (img.complete) {
+        const copies = document.getElementById("copies").value
+        for (let i = 0; i < copies; i++) {
+            batch.push(img);
+        }
+    }
+    else {
+        setTimeout(saveToBatch, 300);
+    }
+}
+
+function clearBatch() {
+    batch = [];
+}
+
+function printBatch() {
+    openPrintWindow(null)
+}
+
+function openPrintWindow(imgs) {
     let WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
 
-    const copies = document.getElementById("copies").value
-
-    for (let i = 0; i < copies; i++) {
-        WinPrint.document.write(img.outerHTML);
+    if (imgs != null) { //null for batch
+        for (let i = 0; i < imgs.length; i++) {
+            WinPrint.document.write(imgs[i].outerHTML);
+        }
+    } else {
+        for (let i = 0; i < batch.length; i++) {
+            WinPrint.document.write(batch[i].outerHTML);
+        }
     }
 
     let stylePortrait = `<style type="text/css" media="print">
