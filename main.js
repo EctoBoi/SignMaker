@@ -98,6 +98,10 @@ function saveToBatch() {
         for (let i = 0; i < copies; i++) {
             batch.push(img);
         }
+        if (copies > 1)
+            alert('Saved ' + copies + ' Signs to Batch')
+        else
+            alert('Saved ' + copies + ' Sign to Batch')
     }
     else {
         setTimeout(saveToBatch, 300);
@@ -106,10 +110,14 @@ function saveToBatch() {
 
 function clearBatch() {
     batch = [];
+    alert('Cleared Batch')
 }
 
 function printBatch() {
-    openPrintWindow(null)
+    if (batch.length > 0)
+        openPrintWindow(null)
+    else
+        alert('Batch Empty')
 }
 
 function openPrintWindow(imgs) {
