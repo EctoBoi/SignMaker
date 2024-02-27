@@ -615,7 +615,7 @@ function create11x11SignInsert() {
         document.getElementById("signCanvas").remove()
 
     const o = xToPx("0.45in") //margin offset
-    const canvasWidth = xToPx("10.1in")
+    const canvasWidth = xToPx("10.2in")
     const canvasHeight = xToPx("7.6in")
     const font = "Impact"
     const title1 = document.getElementById("title1").value
@@ -739,8 +739,8 @@ function create17x17SignInsert() {
         document.getElementById("signCanvas").remove()
 
     const o = xToPx("0.35in") //margin offset
-    const canvasWidth = xToPx("16.1in")
-    const canvasHeight = xToPx("10.1in")
+    const canvasWidth = xToPx("16.2in")
+    const canvasHeight = xToPx("10.2in")
     const font = "Impact"
     const title1 = document.getElementById("title1").value
     const title2 = document.getElementById("title2").value

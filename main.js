@@ -134,11 +134,15 @@ function openPrintWindow(imgs) {
     }
 
     let stylePortrait = `<style type="text/css" media="print">
-        @page { size: portrait; display: flex;}
+            @page { size: portrait; display: flex;}
         </style>`
     let styleLandscape = `<style type="text/css" media="print">
-          @page { size: landscape; }
+            @page { size: landscape; }
         </style>`
+
+    WinPrint.document.write(`<style type="text/css">
+                                body { margin: 0; }
+                            </style>`);
 
     if (pageOrientation === "portrait")
         WinPrint.document.write(stylePortrait);
