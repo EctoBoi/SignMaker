@@ -1,5 +1,6 @@
 
 const canvasRatio = 4 //resolution
+const defaultBorderWidth = '2';
 
 function showPrintControls() {
     document.getElementById("printButton").style.visibility = "visible"
@@ -37,7 +38,7 @@ function create2x4HangTag() {
     const ctx = c.getContext("2d");
 
     ctx.strokeStyle = "black";
-    ctx.lineWidth = "4";
+    ctx.lineWidth = defaultBorderWidth;
     ctx.textBaseline = "alphabetic";
 
     //border
@@ -189,7 +190,7 @@ function create3x5HangTag() {
     const ctx = c.getContext("2d");
 
     ctx.strokeStyle = "black";
-    ctx.lineWidth = "4";
+    ctx.lineWidth = defaultBorderWidth;
     ctx.textBaseline = "alphabetic";
 
     //border
@@ -338,7 +339,7 @@ function create4x4FactTag() {
     const ctx = c.getContext("2d");
 
     ctx.strokeStyle = "black";
-    ctx.lineWidth = "4";
+    ctx.lineWidth = defaultBorderWidth;
     ctx.textBaseline = "alphabetic";
 
     //border
@@ -487,7 +488,7 @@ function create4x2Binocular() {
     const ctx = c.getContext("2d");
 
     ctx.strokeStyle = "black";
-    ctx.lineWidth = "4";
+    ctx.lineWidth = defaultBorderWidth;
     ctx.textBaseline = "alphabetic";
 
     //border
