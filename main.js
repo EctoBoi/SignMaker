@@ -10,7 +10,8 @@ document.getElementById("printBatch").addEventListener("click", printBatch)
 
 let pageOrientation = "portrait"
 
-let batch = []
+let batch = [];
+let batchCount = 0;
 
 async function fillFromInfo() {
     const clipboardContents = await navigator.clipboard.readText();
@@ -64,6 +65,8 @@ function createSign() {
         pageOrientation = "landscape"
         create17x17SignInsert()
     }
+
+    loadBatchPreview()
 }
 
 function print() {
@@ -88,7 +91,6 @@ function print() {
 
 function saveToBatch() {
     let img = new Image();
-    img.id = 'tempPrintImage'
     img.src = document.getElementById("signCanvas").toDataURL("image/png");
     img.width = img.width * 0.25;
     img.height = img.height * 0.25;
@@ -96,8 +98,15 @@ function saveToBatch() {
     if (img.complete) {
         const copies = document.getElementById("copies").value
         for (let i = 0; i < copies; i++) {
-            batch.push(img);
+            let imgClone = img.cloneNode(true)
+            imgClone.id = 'tempPrintImage' + batchCount;
+            batchCount++;
+
+            batch.push(imgClone);
         }
+
+        loadBatchPreview()
+
         if (copies > 1)
             alert('Saved ' + copies + ' Signs to Batch')
         else
@@ -110,6 +119,10 @@ function saveToBatch() {
 
 function clearBatch() {
     batch = [];
+    batchCount = 0;
+
+    loadBatchPreview()
+
     alert('Cleared Batch')
 }
 
@@ -118,6 +131,41 @@ function printBatch() {
         openPrintWindow(null)
     else
         alert('Batch Empty')
+}
+
+function loadBatchPreview() {
+    let batchPreviewDiv = document.getElementById('batchPreview');
+    batchPreviewDiv.innerHTML = ""
+
+    if (batch.length > 0) {
+        let width = "100%";
+
+        if (pageOrientation === "portrait") {
+            width = xToPx('8.5in') + "px"
+        } else if (pageOrientation === "landscape") {
+            width = xToPx('11in') + "px"
+        }
+        batchPreviewDiv.style.minWidth = width;
+        batchPreviewDiv.style.width = width;
+
+        for (let i = 0; i < batch.length; i++) {
+            batch[i].onclick = removeFromBatch;
+
+            batchPreviewDiv.append(batch[i]);
+        }
+    }
+}
+
+function removeFromBatch() {
+    if (confirm('Remove from Batch?')) {
+        for (let i = 0; i < batch.length; i++) {
+            if (batch[i].id === this.id) {
+                batch.splice(i, 1);
+            }
+        }
+
+        loadBatchPreview()
+    }
 }
 
 function openPrintWindow(imgs) {
@@ -156,4 +204,14 @@ function openPrintWindow(imgs) {
         WinPrint.print();
         WinPrint.close();
     }, 300)
+}
+
+function xToPx(x) {
+    var div = document.createElement('div');
+    div.style.display = 'block';
+    div.style.height = x;
+    document.body.appendChild(div);
+    var px = parseFloat(window.getComputedStyle(div, null).height);
+    div.parentNode.removeChild(div);
+    return px;
 }

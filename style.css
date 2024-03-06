@@ -31,7 +31,7 @@ h1 {
     margin-bottom: 5px;
 }
 
-.formInputDiv{
+.formInputDiv {
     display: flex;
     flex-direction: row;
     margin-bottom: 4px;
@@ -44,9 +44,9 @@ h1 {
     width: 160px;
 }
 
-#form input[type='number']{
+#form input[type='number'] {
     width: 40px;
-} 
+}
 
 #signCanvas {
     background-color: white;
@@ -57,23 +57,31 @@ h1 {
     padding: 3px 0px;
 }
 
-#saveToBatch, #printBatch, #clearBatch{
+#saveToBatch,
+#printBatch,
+#clearBatch {
     font-size: 13px;
     padding: 3px;
     width: 150px;
 }
 
-#saveToBatch{
+#saveToBatch {
     margin-top: 7px;
 }
 
-#printBatch{
-    margin-bottom: 40px;
-}
-
-#clearBatch{
+#clearBatch {
     width: 120px;
     background-image: linear-gradient(45deg, #36b0d9 0%, #f55f2e 51%, #ff0000 100%);
+    margin: 40px;
+}
+
+#barcodeDiv {
+    position: absolute;
+    top: -100px;
+}
+
+#batchPreview {
+    background-color: white;
 }
 
 .button-87 {
