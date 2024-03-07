@@ -118,12 +118,12 @@ function saveToBatch() {
 }
 
 function clearBatch() {
-    batch = [];
-    batchCount = 0;
+    if (confirm('Clear Batch?')){
+        batch = [];
+        batchCount = 0;
 
-    loadBatchPreview()
-
-    alert('Cleared Batch')
+        loadBatchPreview()
+    }
 }
 
 function printBatch() {
