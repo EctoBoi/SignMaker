@@ -123,11 +123,15 @@ function saveToBatch() {
 }
 
 function clearBatch() {
-    if (confirm("Clear Batch?")) {
-        batch = [];
-        batchCount = 0;
+    if (batch.length > 0) {
+        if (confirm("Clear Batch?")) {
+            batch = [];
+            batchCount = 0;
 
-        loadBatchPreview();
+            loadBatchPreview();
+        }
+    } else {
+        alert("Batch Empty");
     }
 }
 
