@@ -10,7 +10,7 @@ document.getElementById("printBatch").addEventListener("click", printBatch);
 
 document.getElementById("sizes").addEventListener("change", () => {
     const signtype = document.getElementById("sizes").value;
-    if (signtype === "11x11 Sign Insert" || signtype === "17x17 Sign Insert") {
+    if (signtype === "11x11 Sign Insert" || signtype === "17x17 Sign Insert" || signtype === "4x4 Fact Tag") {
         document.getElementById("formExtras").style.display = "flex";
     } else {
         document.getElementById("formExtras").style.display = "none";

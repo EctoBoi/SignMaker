@@ -313,6 +313,7 @@ function create4x4FactTag() {
     const font = "Impact";
     const title1 = document.getElementById("title1").value;
     const title2 = document.getElementById("title2").value;
+    const extras = document.getElementById("extras").value;
     const price = document.getElementById("price").value;
     const dollars = price.split(".")[0].replace(/,/g, "");
     const cents = price.split(".")[1] === undefined ? "" : price.split(".")[1];
@@ -441,6 +442,12 @@ function create4x4FactTag() {
         };
     } else {
         saleEnds();
+    }
+
+    //extras
+    if (extras !== "") {
+        ctx.font = xToPx("5mm") + "px " + font;
+        ctx.fillText(extras, canvasWidth / 2 - ctx.measureText(extras).width / 2, xToPx("68mm"));
     }
 
     //reg
