@@ -1,4 +1,5 @@
 body {
+    visibility: visible;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -28,12 +29,6 @@ h1 {
 #form {
     display: flex;
     flex-direction: row;
-}
-
-.row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
 }
 
 .col {
@@ -75,8 +70,21 @@ select:hover {
     border-color: #7ad6f5;
 }
 
+.button-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.button-wrapper #formCopies p {
+    width: 60px;
+}
+
 #copies {
     width: 60px;
+}
+
+#createButton {
+    margin-right: 150px;
 }
 
 #signCanvas {

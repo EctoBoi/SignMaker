@@ -5,6 +5,11 @@
         <meta name="viewport" content="width=device-width" />
         <title>Sign Maker</title>
         <link rel="icon" type="image/x-icon" href="/images/signpost.ico" />
+        <style>
+            body {
+                visibility: hidden;
+            }
+        </style>
         <link href="style.css" rel="stylesheet" type="text/css" />
     </head>
 
@@ -60,13 +65,14 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="button-wrapper">
                 <div class="formInputDiv" id="formCopies">
                     <p>Copies</p>
-                    <input type="number" id="copies" value="1" size="5" />
+                    <input type="number" id="copies" value="1" size="5" min="1" />
                 </div>
                 <button class="button-87" role="button" id="createButton">Create</button>
             </div>
+
             <button class="button-87" role="button" id="printButton" style="visibility: hidden">Print</button>
 
             <div id="canvasDiv"></div>
