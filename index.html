@@ -79,6 +79,12 @@
             <div id="barcodeDiv"></div>
 
             <button class="button-87" role="button" id="saveToBatch" style="visibility: hidden">Save To Batch</button>
+            <div class="formInputDiv" id="formBatchSelect" style="visibility: hidden">
+                <p>Batch</p>
+                <select id="selectBatch">
+                    <option value="" disabled selected>No Batches</option>
+                </select>
+            </div>
             <button class="button-87" role="button" id="printBatch" style="visibility: hidden">Print Batch</button>
 
             <div id="batchPreview"></div>
@@ -86,8 +92,6 @@
             <button class="button-87" role="button" id="clearBatch" style="visibility: hidden">Clear Batch</button>
         </div>
 
-        <script src="JsBarcode.all.min.js"></script>
-        <script type="module" src="CreateSign.js"></script>
         <script type="module" src="main.js"></script>
     </body>
 </html>
