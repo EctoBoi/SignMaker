@@ -13,7 +13,7 @@ h1 {
 
 @font-face {
     font-family: Roboto;
-    src: url(RobotoMono-VariableFont_wght.ttf);
+    src: url(./assets/fonts/RobotoMono-VariableFont_wght.ttf);
 }
 
 #content {
