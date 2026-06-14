@@ -79,6 +79,10 @@ select:hover {
     width: 60px;
 }
 
+#formBatchSelect p {
+    width: 50px;
+}
+
 #copies {
     width: 60px;
 }

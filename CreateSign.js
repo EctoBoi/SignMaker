@@ -1,9 +1,11 @@
 const canvasRatio = 4; //resolution
 const defaultBorderWidth = "2";
+import JsBarcode from "jsbarcode";
 
 function showPrintControls() {
     document.getElementById("printButton").style.visibility = "visible";
     document.getElementById("saveToBatch").style.visibility = "visible";
+    document.getElementById("formBatchSelect").style.visibility = "visible";
     document.getElementById("clearBatch").style.visibility = "visible";
     document.getElementById("printBatch").style.visibility = "visible";
 }
@@ -75,16 +77,15 @@ function create2x4HangTag() {
 
     //price
     let priceWidth = 0;
-    let dollarsWidth = 0;
     let dollorsSize = xToPx("23mm");
-    let centsWidth = 0;
     let centsSize = xToPx("11.5mm");
 
     ctx.font = dollorsSize + "px " + font;
-    dollarsWidth = ctx.measureText(dollars).width;
+    let dollarsWidth = ctx.measureText(dollars).width;
     priceWidth += dollarsWidth;
+
     ctx.font = centsSize + "px " + font;
-    centsWidth = ctx.measureText(cents).width;
+    let centsWidth = ctx.measureText(cents).width;
     priceWidth += centsWidth;
 
     let priceOffset = 0;
@@ -224,16 +225,15 @@ function create3x5HangTag() {
 
     //price
     let priceWidth = 0;
-    let dollarsWidth = 0;
     let dollorsSize = xToPx("31mm");
-    let centsWidth = 0;
     let centsSize = xToPx("15.5mm");
 
     ctx.font = dollorsSize + "px " + font;
-    dollarsWidth = ctx.measureText(dollars).width;
+    let dollarsWidth = ctx.measureText(dollars).width;
     priceWidth += dollarsWidth;
+
     ctx.font = centsSize + "px " + font;
-    centsWidth = ctx.measureText(cents).width;
+    let centsWidth = ctx.measureText(cents).width;
     priceWidth += centsWidth;
 
     let priceOffset = 0;
@@ -372,16 +372,14 @@ function create4x4FactTag() {
 
     //price
     let priceWidth = 0;
-    let dollarsWidth = 0;
     let dollorsSize = xToPx("30mm");
-    let centsWidth = 0;
     let centsSize = xToPx("15mm");
 
     ctx.font = dollorsSize + "px " + font;
-    dollarsWidth = ctx.measureText(dollars).width;
+    let dollarsWidth = ctx.measureText(dollars).width;
     priceWidth += dollarsWidth;
     ctx.font = centsSize + "px " + font;
-    centsWidth = ctx.measureText(cents).width;
+    let centsWidth = ctx.measureText(cents).width;
     priceWidth += centsWidth;
 
     let priceOffset = 0;
@@ -525,16 +523,15 @@ function create4x2Binocular() {
 
     //price
     let priceWidth = 0;
-    let dollarsWidth = 0;
     let dollorsSize = xToPx("24mm");
-    let centsWidth = 0;
     let centsSize = xToPx("12mm");
 
     ctx.font = dollorsSize + "px " + font;
-    dollarsWidth = ctx.measureText(dollars).width;
+    let dollarsWidth = ctx.measureText(dollars).width;
     priceWidth += dollarsWidth;
+
     ctx.font = centsSize + "px " + font;
-    centsWidth = ctx.measureText(cents).width;
+    let centsWidth = ctx.measureText(cents).width;
     priceWidth += centsWidth;
 
     let priceOffset = -1;
@@ -649,16 +646,15 @@ function create11x11SignInsert() {
 
     //price
     let priceWidth = 0;
-    let dollarsWidth = 0;
     let dollorsSize = xToPx(80 - (extras !== "" ? 5 : 0) + "mm");
-    let centsWidth = 0;
     let centsSize = xToPx("40mm");
 
     ctx.font = dollorsSize + "px " + font;
-    dollarsWidth = ctx.measureText(dollars).width;
+    let dollarsWidth = ctx.measureText(dollars).width;
     priceWidth += dollarsWidth;
+
     ctx.font = centsSize + "px " + font;
-    centsWidth = ctx.measureText(cents).width;
+    let centsWidth = ctx.measureText(cents).width;
     priceWidth += centsWidth;
 
     let priceOffset = 0;
@@ -781,16 +777,15 @@ function create17x17SignInsert() {
 
     //price
     let priceWidth = 0;
-    let dollarsWidth = 0;
     let dollorsSize = xToPx(126 - (extras === "" ? 0 : 9) + "mm");
-    let centsWidth = 0;
     let centsSize = xToPx("63mm");
 
     ctx.font = dollorsSize + "px " + font;
-    dollarsWidth = ctx.measureText(dollars).width;
+    let dollarsWidth = ctx.measureText(dollars).width;
     priceWidth += dollarsWidth;
+
     ctx.font = centsSize + "px " + font;
-    centsWidth = ctx.measureText(cents).width;
+    let centsWidth = ctx.measureText(cents).width;
     priceWidth += centsWidth;
 
     let priceOffset = 0;
