@@ -271,7 +271,7 @@ function loadBatchPreview() {
     const currentBatch = batches.find((b) => b.type === batchSelect.value);
 
     if (currentBatch && currentBatch.signs.length > 0) {
-        for (let i = 0; i < currentBatch.signs.length; i++) {
+        for (let i = currentBatch.signs.length - 1; i >= 0; i--) {
             const previewImg = currentBatch.signs[i].cloneNode(true) as HTMLImageElement;
             previewImg.onclick = removeFromBatch.bind(currentBatch.signs[i]);
             previewImg.style.cursor = "pointer";
