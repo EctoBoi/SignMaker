@@ -1,5 +1,7 @@
+export const resolution = 4;
+
 export function createHiDPICanvas(w: number, h: number): HTMLCanvasElement {
-    const ratio = 4; //resolution
+    const ratio = resolution;
     const canvas = document.createElement("canvas");
     canvas.width = w * ratio;
     canvas.height = h * ratio;
