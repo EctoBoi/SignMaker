@@ -2,21 +2,15 @@ import JsBarcode from "jsbarcode";
 import { createHiDPICanvas, xToPx } from "./canvas-utils.ts";
 import { SignInfo } from "./main.ts";
 
-const canvasDiv = document.getElementById("canvasDiv") as HTMLDivElement;
-const barcodeDiv = document.getElementById("barcodeDiv") as HTMLDivElement;
-
 const defaultBorderWidth = "2";
 const font = "Impact";
 
-export function create2x4HangTag(signInfo: SignInfo) {
-    canvasDiv.replaceChildren();
-
+export function create2x4HangTag(signInfo: SignInfo): HTMLCanvasElement {
     const canvasWidth = xToPx("48mm");
     const canvasHeight = xToPx("52mm");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
     c.id = "signCanvas";
-    canvasDiv.appendChild(c);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -105,21 +99,19 @@ export function create2x4HangTag(signInfo: SignInfo) {
     }
 
     //sku
-    barcodeDiv.replaceChildren();
-
     if (signInfo.sku !== "") {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.id = "barcode";
-        barcodeDiv.append(svg);
+        const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgNode.id = "barcode";
 
-        JsBarcode("#barcode", signInfo.sku, {
+        JsBarcode(svgNode, signInfo.sku, {
             width: 0.8,
             height: 6,
             margin: 0,
             textMargin: 0,
             fontSize: 10,
+            xmlDocument: document,
         });
-        const xml = new XMLSerializer().serializeToString(svg);
+        const xml = new XMLSerializer().serializeToString(svgNode);
         const base64 = "data:image/svg+xml;base64," + btoa(xml);
         const img = new Image();
         img.src = base64;
@@ -138,17 +130,16 @@ export function create2x4HangTag(signInfo: SignInfo) {
         ctx.font = xToPx("5mm") + "px " + font;
         ctx.fillText("Reg. $" + signInfo.regPrice, canvasWidth / 2 - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2, xToPx("39mm"));
     }
+
+    return c;
 }
 
-export function create3x5HangTag(signInfo: SignInfo) {
-    canvasDiv.replaceChildren();
-
+export function create3x5HangTag(signInfo: SignInfo): HTMLCanvasElement {
     const canvasWidth = xToPx("2.875in");
     const canvasHeight = xToPx("3.1875in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
     c.id = "signCanvas";
-    canvasDiv.appendChild(c);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -237,19 +228,17 @@ export function create3x5HangTag(signInfo: SignInfo) {
     }
 
     //sku
-    barcodeDiv.replaceChildren();
-
     if (signInfo.sku !== "") {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.id = "barcode";
-        barcodeDiv.append(svg);
+        const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgNode.id = "barcode";
 
-        JsBarcode("#barcode", signInfo.sku, {
+        JsBarcode(svgNode, signInfo.sku, {
             width: 1,
             height: 6,
             fontSize: 12,
+            xmlDocument: document,
         });
-        const xml = new XMLSerializer().serializeToString(svg);
+        const xml = new XMLSerializer().serializeToString(svgNode);
         const base64 = "data:image/svg+xml;base64," + btoa(xml);
         const img = new Image();
         img.src = base64;
@@ -268,17 +257,16 @@ export function create3x5HangTag(signInfo: SignInfo) {
         ctx.font = xToPx("6mm") + "px " + font;
         ctx.fillText("Reg. $" + signInfo.regPrice, canvasWidth / 2 - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2, xToPx("58mm"));
     }
+
+    return c;
 }
 
-export function create4x4FactTag(signInfo: SignInfo) {
-    canvasDiv.replaceChildren();
-
+export function create4x4FactTag(signInfo: SignInfo): HTMLCanvasElement {
     const canvasWidth = xToPx("4in");
     const canvasHeight = xToPx("4in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
     c.id = "signCanvas";
-    canvasDiv.appendChild(c);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -366,19 +354,17 @@ export function create4x4FactTag(signInfo: SignInfo) {
     }
 
     //sku
-    barcodeDiv.replaceChildren();
-
     if (signInfo.sku !== "") {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.id = "barcode";
-        barcodeDiv.append(svg);
+        const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgNode.id = "barcode";
 
-        JsBarcode("#barcode", signInfo.sku, {
+        JsBarcode(svgNode, signInfo.sku, {
             width: 1.4,
             height: 8,
             fontSize: 13,
+            xmlDocument: document,
         });
-        const xml = new XMLSerializer().serializeToString(svg);
+        const xml = new XMLSerializer().serializeToString(svgNode);
         const base64 = "data:image/svg+xml;base64," + btoa(xml);
         const img = new Image();
         img.src = base64;
@@ -403,17 +389,16 @@ export function create4x4FactTag(signInfo: SignInfo) {
         ctx.font = xToPx("4mm") + "px " + font;
         ctx.fillText("Reg. $" + signInfo.regPrice, xToPx("10mm"), xToPx("87mm"));
     }
+
+    return c;
 }
 
-export function create4x2Binocular(signInfo: SignInfo) {
-    canvasDiv.replaceChildren();
-
+export function create4x2Binocular(signInfo: SignInfo): HTMLCanvasElement {
     const canvasWidth = xToPx("4.5in");
     const canvasHeight = xToPx("2.70in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
     c.id = "signCanvas";
-    canvasDiv.appendChild(c);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -502,21 +487,19 @@ export function create4x2Binocular(signInfo: SignInfo) {
     }
 
     //sku
-    barcodeDiv.replaceChildren();
-
     if (signInfo.sku !== "") {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.id = "barcode";
-        barcodeDiv.append(svg);
+        const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgNode.id = "barcode";
 
-        JsBarcode("#barcode", signInfo.sku, {
+        JsBarcode(svgNode, signInfo.sku, {
             width: 1,
             height: 8,
             margin: 0,
             textMargin: 0,
             fontSize: 13,
+            xmlDocument: document,
         });
-        const xml = new XMLSerializer().serializeToString(svg);
+        const xml = new XMLSerializer().serializeToString(svgNode);
         const base64 = "data:image/svg+xml;base64," + btoa(xml);
         const img = new Image();
         img.src = base64;
@@ -535,18 +518,17 @@ export function create4x2Binocular(signInfo: SignInfo) {
         ctx.font = xToPx("4mm") + "px " + font;
         ctx.fillText("Reg. $" + signInfo.regPrice, xToPx("77mm"), xToPx("62mm"));
     }
+
+    return c;
 }
 
-export function create11x11SignInsert(signInfo: SignInfo) {
-    canvasDiv.replaceChildren();
-
+export function create11x11SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     const o = xToPx("0.45in"); //margin offset
     const canvasWidth = xToPx("10.2in");
     const canvasHeight = xToPx("7.6in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
     c.id = "signCanvas";
-    canvasDiv.appendChild(c);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -607,19 +589,17 @@ export function create11x11SignInsert(signInfo: SignInfo) {
     }
 
     //sku
-    barcodeDiv.replaceChildren();
-
     if (signInfo.sku !== "") {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.id = "barcode";
-        barcodeDiv.append(svg);
+        const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgNode.id = "barcode";
 
-        JsBarcode("#barcode", signInfo.sku, {
+        JsBarcode(svgNode, signInfo.sku, {
             width: 1.4,
             height: 8,
             fontSize: 13,
+            xmlDocument: document,
         });
-        const xml = new XMLSerializer().serializeToString(svg);
+        const xml = new XMLSerializer().serializeToString(svgNode);
         const base64 = "data:image/svg+xml;base64," + btoa(xml);
         const img = new Image();
         img.src = base64;
@@ -648,18 +628,17 @@ export function create11x11SignInsert(signInfo: SignInfo) {
         }
         ctx.fillText("Reg. $" + signInfo.regPrice, canvasWidth / 2 - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2, xToPx("177mm") - o);
     }
+
+    return c;
 }
 
-export function create17x17SignInsert(signInfo: SignInfo) {
-    canvasDiv.replaceChildren();
-
+export function create17x17SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     const o = xToPx("0.35in"); //margin offset
     const canvasWidth = xToPx("16.2in");
     const canvasHeight = xToPx("10.2in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
     c.id = "signCanvas";
-    canvasDiv.appendChild(c);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -721,21 +700,19 @@ export function create17x17SignInsert(signInfo: SignInfo) {
     }
 
     //sku
-    barcodeDiv.replaceChildren();
-
     if (signInfo.sku !== "") {
-        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        svg.id = "barcode";
-        barcodeDiv.append(svg);
+        const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svgNode.id = "barcode";
 
-        JsBarcode("#barcode", signInfo.sku, {
+        JsBarcode(svgNode, signInfo.sku, {
             width: 2,
             height: 14,
             margin: 0,
             textMargin: 0,
             fontSize: 20,
+            xmlDocument: document,
         });
-        const xml = new XMLSerializer().serializeToString(svg);
+        const xml = new XMLSerializer().serializeToString(svgNode);
         const base64 = "data:image/svg+xml;base64," + btoa(xml);
         const img = new Image();
         img.src = base64;
@@ -764,4 +741,6 @@ export function create17x17SignInsert(signInfo: SignInfo) {
         }
         ctx.fillText("Reg. $" + signInfo.regPrice, canvasWidth / 2 - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2, xToPx("221mm") - o);
     }
+
+    return c;
 }

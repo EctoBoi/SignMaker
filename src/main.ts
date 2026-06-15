@@ -1,10 +1,10 @@
 import * as signMaker from "./sign-maker.ts";
-import { xToPx } from "./canvas-utils.ts";
+import { xToPx, resolution } from "./canvas-utils.ts";
 
 // DOM References and Event Listeners
 const fillInfoButton = document.getElementById("fillInfoButton") as HTMLButtonElement;
 
-const sizesSelect = document.getElementById("sizes") as HTMLSelectElement;
+const typesSelect = document.getElementById("types") as HTMLSelectElement;
 const title1Input = document.getElementById("title1") as HTMLInputElement;
 const title2Input = document.getElementById("title2") as HTMLInputElement;
 const extrasInput = document.getElementById("extras") as HTMLInputElement;
@@ -16,6 +16,7 @@ const copiesInput = document.getElementById("copies") as HTMLInputElement;
 const createButton = document.getElementById("createButton") as HTMLButtonElement;
 const printButton = document.getElementById("printButton") as HTMLButtonElement;
 
+const canvasDiv = document.getElementById("canvasDiv") as HTMLDivElement;
 const formExtras = document.getElementById("formExtras") as HTMLDivElement;
 const formBatchSelect = document.getElementById("formBatchSelect") as HTMLDivElement;
 
@@ -33,8 +34,8 @@ clearBatchButton.addEventListener("click", clearBatch);
 printBatchButton.addEventListener("click", printBatch);
 batchSelect.addEventListener("change", loadBatchPreview);
 
-sizesSelect.addEventListener("change", () => {
-    const signtype = sizesSelect.value;
+typesSelect.addEventListener("change", () => {
+    const signtype = typesSelect.value;
     if (signtype === "11x11 Sign Insert" || signtype === "17x17 Sign Insert" || signtype === "4x4 Fact Tag") {
         formExtras.style.display = "flex";
     } else {
@@ -42,8 +43,8 @@ sizesSelect.addEventListener("change", () => {
     }
 });
 
-export interface SignInfo {
-    size: string;
+export type SignInfo = {
+    type: string;
     title1: string;
     title2: string;
     extras: string;
@@ -53,16 +54,19 @@ export interface SignInfo {
     cents: string;
     regPrice: string;
     endDate: string;
-}
+};
 
-interface Batch {
-    name: string;
+type Batch = {
+    type: string;
     signs: HTMLImageElement[];
-}
+};
 
 // State
 const batches: Batch[] = [];
-let lastCreatedBatchName: string | null = null;
+let lastCreatedSign: {
+    type: string | null;
+    canvas: HTMLCanvasElement | null;
+} = { type: null, canvas: null };
 
 async function fillFromInfo() {
     const clipboardContents = await navigator.clipboard.readText();
@@ -103,7 +107,7 @@ function getSignInfo(): SignInfo {
     }
 
     return {
-        size: sizesSelect.value,
+        type: typesSelect.value,
         title1: title1Input.value,
         title2: title2Input.value,
         extras: extrasInput.value,
@@ -117,42 +121,55 @@ function getSignInfo(): SignInfo {
 }
 
 function createSign() {
+    lastCreatedSign = { type: null, canvas: null };
     const signInfo = getSignInfo();
-    lastCreatedBatchName = signInfo.size;
+    let signCanvas: HTMLCanvasElement | null = null;
 
-    if (signInfo.size === "2x4 Hang Tag") {
-        signMaker.create2x4HangTag(signInfo);
+    if (signInfo.type === "2x4 Hang Tag") {
+        signCanvas = signMaker.create2x4HangTag(signInfo);
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
     }
-    if (signInfo.size === "3.25x5.75 Hang Tag") {
-        signMaker.create3x5HangTag(signInfo);
+    if (signInfo.type === "3.25x5.75 Hang Tag") {
+        signCanvas = signMaker.create3x5HangTag(signInfo);
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
     }
-    if (signInfo.size === "4x4 Fact Tag") {
-        signMaker.create4x4FactTag(signInfo);
+    if (signInfo.type === "4x4 Fact Tag") {
+        signCanvas = signMaker.create4x4FactTag(signInfo);
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
     }
-    if (signInfo.size === "4.5x2.75 Binocular") {
-        signMaker.create4x2Binocular(signInfo);
+    if (signInfo.type === "4.5x2.75 Binocular") {
+        signCanvas = signMaker.create4x2Binocular(signInfo);
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
     }
-    if (signInfo.size === "11x11 Sign Insert") {
-        signMaker.create11x11SignInsert(signInfo);
+    if (signInfo.type === "11x11 Sign Insert") {
+        signCanvas = signMaker.create11x11SignInsert(signInfo);
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
     }
-    if (signInfo.size === "17x17 Sign Insert") {
-        signMaker.create17x17SignInsert(signInfo);
+    if (signInfo.type === "17x17 Sign Insert") {
+        signCanvas = signMaker.create17x17SignInsert(signInfo);
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
+    }
+
+    if (signCanvas) {
+        const scaleFactor = signInfo.type === "17x17 Sign Insert" ? 0.6 : signInfo.type === "11x11 Sign Insert" ? 0.8 : 1;
+        signCanvas.style.width = (signCanvas.width / resolution) * scaleFactor + "px";
+        signCanvas.style.height = (signCanvas.height / resolution) * scaleFactor + "px";
+        canvasDiv.replaceChildren(signCanvas);
     }
 
     showPrintControls();
 }
 
 function print() {
-    const signCanvas = document.getElementById("signCanvas") as HTMLCanvasElement;
-    if (!signCanvas) {
+    if (lastCreatedSign.canvas == null) {
         alert("No Sign Created");
         return;
     }
     const img = new Image();
     img.id = "tempPrintImage";
-    img.src = signCanvas.toDataURL("image/png");
-    img.width = img.width * 0.25;
-    img.height = img.height * 0.25;
+    img.src = lastCreatedSign.canvas.toDataURL("image/png");
+    img.width = img.width / resolution;
+    img.height = img.height / resolution;
 
     if (img.complete) {
         const copies = parseInt(copiesInput.value);
@@ -160,7 +177,7 @@ function print() {
         for (let i = 0; i < copies; i++) {
             imgs.push(img);
         }
-        if (lastCreatedBatchName) openPrintWindow(imgs, getSignFormat(lastCreatedBatchName));
+        if (lastCreatedSign.type) openPrintWindow(imgs, getSignFormat(lastCreatedSign.type));
         else alert("No Sign Created");
     } else {
         setTimeout(print, 300);
@@ -175,33 +192,32 @@ function updateBatchSelect(batchName: string | null) {
         batchSelect.innerHTML = `<option value="" disabled selected>Select Batch</option>`;
     }
     for (let i = 0; i < batches.length; i++) {
-        batchSelect.innerHTML += `<option value="${batches[i].name}">${batches[i].name}</option>`;
+        batchSelect.innerHTML += `<option value="${batches[i].type}">${batches[i].type}</option>`;
     }
     if (batchName) batchSelect.value = batchName;
 }
 
 function saveToBatch() {
-    const signCanvas = document.getElementById("signCanvas") as HTMLCanvasElement;
-    if (!signCanvas) {
+    if (lastCreatedSign.canvas == null) {
         alert("No Sign Created");
         return;
     }
     const img = new Image();
-    img.src = signCanvas.toDataURL("image/png");
-    img.width = img.width * 0.25;
-    img.height = img.height * 0.25;
+    img.src = lastCreatedSign.canvas.toDataURL("image/png");
+    img.width = img.width / resolution;
+    img.height = img.height / resolution;
 
-    const batchName = lastCreatedBatchName;
+    const batchName = lastCreatedSign.type;
     if (!batchName) {
         alert("No Sign Created");
         return;
     }
 
-    if (batches.find((b) => b.name === batchName) == null) {
-        batches.push({ name: batchName, signs: [] });
+    if (batches.find((b) => b.type === batchName) == null) {
+        batches.push({ type: batchName, signs: [] });
     }
 
-    const currentBatch = batches.find((b) => b.name === batchName);
+    const currentBatch = batches.find((b) => b.type === batchName);
     if (!currentBatch) {
         alert("Batch Error");
         return;
@@ -226,9 +242,9 @@ function saveToBatch() {
 }
 
 function clearBatch() {
-    const currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.type === batchSelect.value);
     if (currentBatch && currentBatch.signs.length > 0) {
-        if (confirm("Clear Batch " + currentBatch.name + "?")) {
+        if (confirm("Clear Batch " + currentBatch.type + "?")) {
             batches.splice(batches.indexOf(currentBatch), 1);
 
             updateBatchSelect(null);
@@ -240,9 +256,9 @@ function clearBatch() {
 }
 
 function printBatch() {
-    const currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.type === batchSelect.value);
     if (currentBatch && currentBatch.signs.length > 0) {
-        const format = getSignFormat(currentBatch.name);
+        const format = getSignFormat(currentBatch.type);
         openPrintWindow(currentBatch.signs, format);
     } else {
         alert("Batch Empty");
@@ -252,25 +268,19 @@ function printBatch() {
 function loadBatchPreview() {
     batchPreviewDiv.replaceChildren();
 
-    const currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.type === batchSelect.value);
 
     if (currentBatch && currentBatch.signs.length > 0) {
-        const signFormat = getSignFormat(currentBatch.name);
-        batchPreviewDiv.style.width = xToPx("11in") + "px";
-
         for (let i = 0; i < currentBatch.signs.length; i++) {
             const previewImg = currentBatch.signs[i].cloneNode(true) as HTMLImageElement;
             previewImg.onclick = removeFromBatch.bind(currentBatch.signs[i]);
             previewImg.style.cursor = "pointer";
             previewImg.title = "Click to Remove from Batch";
             previewImg.style.backgroundColor = "white";
-            if (signFormat.width > xToPx("16in")) {
-                previewImg.width = previewImg.width * 0.7;
-                previewImg.height = previewImg.height * 0.7;
-            } else if (signFormat.width > xToPx("10in")) {
-                previewImg.width = previewImg.width * 0.8;
-                previewImg.height = previewImg.height * 0.8;
-            }
+            previewImg.style.border = "1px solid black";
+            const scaleFactor = currentBatch.type === "17x17 Sign Insert" ? 0.6 : currentBatch.type === "11x11 Sign Insert" ? 0.8 : 1;
+            previewImg.width = previewImg.width * scaleFactor;
+            previewImg.height = previewImg.height * scaleFactor;
 
             batchPreviewDiv.append(previewImg);
         }
@@ -278,7 +288,7 @@ function loadBatchPreview() {
 }
 
 function removeFromBatch(this: HTMLImageElement) {
-    const currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.type === batchSelect.value);
     if (currentBatch && confirm("Remove from Batch?")) {
         for (let i = 0; i < currentBatch.signs.length; i++) {
             if (currentBatch.signs[i].id === this.id) {
