@@ -70,13 +70,15 @@ let lastCreatedSign: {
 
 async function fillFromInfo() {
     const clipboardContents = await navigator.clipboard.readText();
-    if (clipboardContents.split("^").length > 2) {
-        title1Input.value = clipboardContents.split("^")[0];
-        skuInput.value = clipboardContents.split("^")[1];
-        priceInput.value = clipboardContents.split("^")[2];
+    // Expecting clipboard contents in the format: Title1^SKU^Price^RegPrice (RegPrice is optional)
+    const splitContents = clipboardContents.split("^");
+    if (splitContents.length > 2) {
+        title1Input.value = splitContents[0];
+        skuInput.value = splitContents[1];
+        priceInput.value = splitContents[2];
 
-        if (clipboardContents.split("^").length > 3) {
-            regPriceInput.value = clipboardContents.split("^")[3];
+        if (splitContents.length > 3) {
+            regPriceInput.value = splitContents[3];
         } else {
             regPriceInput.value = "";
         }
