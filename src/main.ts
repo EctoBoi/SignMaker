@@ -61,7 +61,7 @@ interface Batch {
 }
 
 // State
-let batches: Batch[] = [];
+const batches: Batch[] = [];
 let lastCreatedBatchName: string | null = null;
 
 async function fillFromInfo() {
@@ -92,9 +92,9 @@ function showPrintControls() {
 }
 
 function getSignInfo(): SignInfo {
-    let price = priceInput.value;
-    let dollars = price ? price.split(".")[0].replace(/,/g, "") : "";
-    let cents = price ? (price.split(".")[1] === undefined ? "" : price.split(".")[1]) : "";
+    const price = priceInput.value;
+    const dollars = price ? price.split(".")[0].replace(/,/g, "") : "";
+    const cents = price ? (price.split(".")[1] === undefined ? "" : price.split(".")[1]) : "";
     let endDate = "";
     if (endDateInput.value !== "") {
         const formDate = new Date(endDateInput.value.replace("-", "/"));
@@ -148,7 +148,7 @@ function print() {
         alert("No Sign Created");
         return;
     }
-    let img = new Image();
+    const img = new Image();
     img.id = "tempPrintImage";
     img.src = signCanvas.toDataURL("image/png");
     img.width = img.width * 0.25;
@@ -156,7 +156,7 @@ function print() {
 
     if (img.complete) {
         const copies = parseInt(copiesInput.value);
-        let imgs = [];
+        const imgs: HTMLImageElement[] = [];
         for (let i = 0; i < copies; i++) {
             imgs.push(img);
         }
@@ -186,12 +186,12 @@ function saveToBatch() {
         alert("No Sign Created");
         return;
     }
-    let img = new Image();
+    const img = new Image();
     img.src = signCanvas.toDataURL("image/png");
     img.width = img.width * 0.25;
     img.height = img.height * 0.25;
 
-    let batchName = lastCreatedBatchName;
+    const batchName = lastCreatedBatchName;
     if (!batchName) {
         alert("No Sign Created");
         return;
@@ -201,7 +201,7 @@ function saveToBatch() {
         batches.push({ name: batchName, signs: [] });
     }
 
-    let currentBatch = batches.find((b) => b.name === batchName);
+    const currentBatch = batches.find((b) => b.name === batchName);
     if (!currentBatch) {
         alert("Batch Error");
         return;
@@ -210,7 +210,7 @@ function saveToBatch() {
     if (img.complete) {
         const copies = parseInt(copiesInput.value);
         for (let i = 0; i < copies; i++) {
-            let imgClone = img.cloneNode(true) as HTMLImageElement;
+            const imgClone = img.cloneNode(true) as HTMLImageElement;
             imgClone.id = "tempPrintImage" + currentBatch.signs.length;
             currentBatch.signs.push(imgClone);
         }
@@ -226,7 +226,7 @@ function saveToBatch() {
 }
 
 function clearBatch() {
-    let currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.name === batchSelect.value);
     if (currentBatch && currentBatch.signs.length > 0) {
         if (confirm("Clear Batch " + currentBatch.name + "?")) {
             batches.splice(batches.indexOf(currentBatch), 1);
@@ -240,9 +240,9 @@ function clearBatch() {
 }
 
 function printBatch() {
-    let currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.name === batchSelect.value);
     if (currentBatch && currentBatch.signs.length > 0) {
-        let format = getSignFormat(currentBatch.name);
+        const format = getSignFormat(currentBatch.name);
         openPrintWindow(currentBatch.signs, format);
     } else {
         alert("Batch Empty");
@@ -252,14 +252,14 @@ function printBatch() {
 function loadBatchPreview() {
     batchPreviewDiv.replaceChildren();
 
-    let currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.name === batchSelect.value);
 
     if (currentBatch && currentBatch.signs.length > 0) {
-        let signFormat = getSignFormat(currentBatch.name);
+        const signFormat = getSignFormat(currentBatch.name);
         batchPreviewDiv.style.width = xToPx("11in") + "px";
 
         for (let i = 0; i < currentBatch.signs.length; i++) {
-            let previewImg = currentBatch.signs[i].cloneNode(true) as HTMLImageElement;
+            const previewImg = currentBatch.signs[i].cloneNode(true) as HTMLImageElement;
             previewImg.onclick = removeFromBatch.bind(currentBatch.signs[i]);
             previewImg.style.cursor = "pointer";
             previewImg.title = "Click to Remove from Batch";
@@ -278,7 +278,7 @@ function loadBatchPreview() {
 }
 
 function removeFromBatch(this: HTMLImageElement) {
-    let currentBatch = batches.find((b) => b.name === batchSelect.value);
+    const currentBatch = batches.find((b) => b.name === batchSelect.value);
     if (currentBatch && confirm("Remove from Batch?")) {
         for (let i = 0; i < currentBatch.signs.length; i++) {
             if (currentBatch.signs[i].id === this.id) {
@@ -308,7 +308,7 @@ function getSignFormat(signName: string): { orientation: string; width: number }
 }
 
 function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string; width: number }) {
-    let WinPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0");
+    const WinPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0");
 
     if (!WinPrint) {
         alert("Popup Blocker is enabled! Please allow popups for this website to print.");
@@ -321,7 +321,7 @@ function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string
         }
     }
 
-    let printStyle = WinPrint.document.createElement("style");
+    const printStyle = WinPrint.document.createElement("style");
     printStyle.media = "print";
     printStyle.innerHTML = `
             body { margin: 0; }
