@@ -1,4 +1,4 @@
-import * as signMaker from "./sign-maker.ts";
+import { createSignCanvas } from "./sign-maker.ts";
 import { xToPx, resolution, mirrorCanvas } from "./canvas-utils.ts";
 
 // DOM References and Event Listeners
@@ -18,6 +18,7 @@ const mirrorCheckbox = document.getElementById("mirror") as HTMLInputElement;
 const printButton = document.getElementById("printButton") as HTMLButtonElement;
 
 const canvasDiv = document.getElementById("canvasDiv") as HTMLDivElement;
+const formTitle2 = document.getElementById("formTitle2") as HTMLDivElement;
 const formExtras = document.getElementById("formExtras") as HTMLDivElement;
 const formBatchSelect = document.getElementById("formBatchSelect") as HTMLDivElement;
 const formMirror = document.getElementById("formMirror") as HTMLDivElement;
@@ -48,7 +49,26 @@ typesSelect.addEventListener("change", () => {
     } else {
         formMirror.style.visibility = "visible";
     }
+    if (signtype === "4.5x2.75 Binocular") {
+        formTitle2.style.display = "none";
+    } else {
+        formTitle2.style.display = "flex";
+    }
 });
+
+/*
+function addTestData() {
+    title1Input.value = "Test Title";
+    title2Input.value = "Test Subtitle";
+    extrasInput.value = "Test Extras";
+    skuInput.value = "1234567";
+    priceInput.value = "19.98";
+    regPriceInput.value = "29.99";
+    endDateInput.value = "2026-12-31";
+}
+
+addTestData();
+*/
 
 export type SignInfo = {
     type: string;
@@ -132,19 +152,8 @@ function getSignInfo(): SignInfo {
 async function createSign() {
     lastCreatedSign = { type: null, canvas: null };
     const signInfo = getSignInfo();
-    let signCanvas: HTMLCanvasElement | null = null;
 
-    if (signInfo.type === "2x4 Hang Tag") signCanvas = await signMaker.create2x4HangTag(signInfo);
-
-    if (signInfo.type === "3.25x5.75 Hang Tag") signCanvas = await signMaker.create3x5HangTag(signInfo);
-
-    if (signInfo.type === "4x4 Fact Tag") signCanvas = await signMaker.create4x4FactTag(signInfo);
-
-    if (signInfo.type === "4.5x2.75 Binocular") signCanvas = await signMaker.create4x2Binocular(signInfo);
-
-    if (signInfo.type === "11x11 Sign Insert") signCanvas = await signMaker.create11x11SignInsert(signInfo);
-
-    if (signInfo.type === "17x17 Sign Insert") signCanvas = await signMaker.create17x17SignInsert(signInfo);
+    let signCanvas: HTMLCanvasElement = await createSignCanvas(signInfo);
 
     if (signCanvas) {
         if (mirrorCheckbox.checked && signInfo.type !== "11x11 Sign Insert" && signInfo.type !== "17x17 Sign Insert") {
@@ -159,8 +168,6 @@ async function createSign() {
         canvasDiv.replaceChildren(signCanvas);
 
         showPrintControls();
-    } else {
-        alert("Sign Type Not Supported");
     }
 }
 
@@ -342,7 +349,8 @@ function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string
             body { margin: 0; }
             @page { 
                 size: ${format.orientation}; 
-                ${format.orientation === "portrait" ? "display: flex;" : ""}
+                ${format.orientation === "portrait" ? "display: flex;" : ""};
+                margin: 0;
             }
         </style>`;
 
