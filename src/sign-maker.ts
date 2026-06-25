@@ -14,7 +14,6 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
 
     const canvasWidth = xToPx(config.width);
     const canvasHeight = xToPx(config.height);
-    const offset = xToPx(config.marginOffset);
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
 
@@ -57,7 +56,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
     ctx.fillText(
         signInfo.title1,
         config.title1.centered ? canvasWidth / 2 - ctx.measureText(signInfo.title1).width / 2 : xToPx(config.title1.x),
-        xToPx(config.title1.y) - offset,
+        xToPx(config.title1.y),
     );
 
     //title2
@@ -66,7 +65,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
         ctx.fillText(
             signInfo.title2,
             config.title2.centered ? canvasWidth / 2 - ctx.measureText(signInfo.title2).width / 2 : xToPx(config.title2.x),
-            xToPx(config.title2.y) - offset,
+            xToPx(config.title2.y),
         );
     }
 
@@ -108,7 +107,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
     ctx.fillText(
         signInfo.dollars,
         config.price.centered ? canvasWidth / 2 - priceWidth / 2 : xToPx(config.price.x) - priceWidth / 2,
-        xToPx(dollorBaseY) - priceOffset - offset,
+        xToPx(dollorBaseY) - priceOffset,
     );
 
     //cent
@@ -116,7 +115,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
     ctx.fillText(
         signInfo.cents,
         config.price.centered ? canvasWidth / 2 + priceWidth / 2 - centsWidth : xToPx(config.price.x) + priceWidth / 2 - centsWidth,
-        xToPx(config.price.centsY) - priceOffset - offset,
+        xToPx(config.price.centsY) - priceOffset,
     );
 
     //sku
@@ -139,7 +138,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
 
         await new Promise((resolve) => {
             img.onload = () => {
-                ctx.drawImage(img, xToPx(config.barcode.x) - img.width / 2, xToPx(config.barcode.y) - offset);
+                ctx.drawImage(img, xToPx(config.barcode.x) - img.width / 2, xToPx(config.barcode.y));
                 resolve(null);
             };
         });
@@ -153,7 +152,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
             config.endDate.centered
                 ? canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2
                 : xToPx(config.endDate.x) - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2,
-            xToPx(config.endDate.y) - offset,
+            xToPx(config.endDate.y),
         );
     }
 
@@ -165,7 +164,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
             config.extras.centered
                 ? canvasWidth / 2 - ctx.measureText(signInfo.extras).width / 2
                 : xToPx(config.extras.x) - ctx.measureText(signInfo.extras).width / 2,
-            xToPx(config.extras.y) - offset,
+            xToPx(config.extras.y),
         );
     }
 
@@ -181,7 +180,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
             config.regPrice.centered
                 ? canvasWidth / 2 - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2
                 : xToPx(config.regPrice.x) - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2,
-            xToPx(config.regPrice.y) - offset,
+            xToPx(config.regPrice.y),
         );
     }
 

@@ -347,7 +347,8 @@ function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string
             body { margin: 0; }
             @page { 
                 size: ${format.orientation}; 
-                ${format.orientation === "portrait" ? "display: flex;" : ""}
+                ${format.orientation === "portrait" ? "display: flex;" : ""};
+                margin: 0;
             }
         </style>`;
 

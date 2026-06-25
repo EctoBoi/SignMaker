@@ -1,7 +1,6 @@
 export type SignConfig = {
     width: string;
     height: string;
-    marginOffset: string;
     borderLineLength?: string;
     title1: { fontSize: string; x: string; y: string; centered: boolean };
     title2?: { fontSize: string; x: string; y: string; centered: boolean };
@@ -37,7 +36,6 @@ export const signConfigs: { [key: string]: SignConfig } = {
         width: "48mm",
         height: "52mm",
         borderLineLength: "3mm",
-        marginOffset: "0",
         title1: { fontSize: "5mm", x: "0", y: "7mm", centered: true },
         title2: { fontSize: "5mm", x: "0", y: "12mm", centered: true },
         price: {
@@ -72,7 +70,6 @@ export const signConfigs: { [key: string]: SignConfig } = {
         width: "2.875in",
         height: "3.1875in",
         borderLineLength: "10mm",
-        marginOffset: "0",
         title1: { fontSize: "7mm", x: "0", y: "12mm", centered: true },
         title2: { fontSize: "7mm", x: "0", y: "19mm", centered: true },
         price: {
@@ -106,7 +103,6 @@ export const signConfigs: { [key: string]: SignConfig } = {
     "4x4 Fact Tag": {
         width: "4in",
         height: "4in",
-        marginOffset: "0",
         borderLineLength: "10mm",
         title1: { fontSize: "9mm", x: "0", y: "12mm", centered: true },
         title2: { fontSize: "9mm", x: "0", y: "21mm", centered: true },
@@ -142,7 +138,6 @@ export const signConfigs: { [key: string]: SignConfig } = {
     "4.5x2.75 Binocular": {
         width: "4.5in",
         height: "2.70in",
-        marginOffset: "0",
         borderLineLength: "10mm",
         title1: { fontSize: "8mm", x: "0", y: "36mm", centered: true },
         price: {
@@ -174,19 +169,18 @@ export const signConfigs: { [key: string]: SignConfig } = {
         },
     },
     "11x11 Sign Insert": {
-        width: "10.2in",
-        height: "7.6in",
-        marginOffset: "0.45in",
-        title1: { fontSize: "13mm", x: "0", y: "77mm", centered: true },
-        title2: { fontSize: "13mm", x: "0", y: "90mm", centered: true },
-        extras: { fontSize: "8mm", x: "0", y: "167mm", centered: true },
+        width: "11in",
+        height: "8.5in",
+        title1: { fontSize: "13mm", x: "0", y: "76mm", centered: true },
+        title2: { fontSize: "13mm", x: "0", y: "89mm", centered: true },
+        extras: { fontSize: "8mm", x: "0", y: "166mm", centered: true },
         price: {
             fontSize: "80mm",
             fontSizeWithExtras: "75mm",
             x: "0",
-            dollarsY: "162mm",
-            dollarsYWithExtras: "158mm",
-            centsY: "136mm",
+            dollarsY: "161mm",
+            dollarsYWithExtras: "157mm",
+            centsY: "135mm",
             centered: true,
             margin: "4in",
         },
@@ -194,37 +188,36 @@ export const signConfigs: { [key: string]: SignConfig } = {
             fontSize: "15mm",
             fontSizeWithExtras: "10mm",
             x: "0",
-            y: "177mm",
+            y: "176mm",
             centered: true,
         },
         barcode: {
             width: 1.4,
             height: 8,
             fontSize: 13,
-            x: "205mm",
-            y: "181mm",
+            x: "215mm",
+            y: "180mm",
         },
         endDate: {
             fontSize: "6mm",
             x: "0",
-            y: "184mm",
+            y: "183mm",
             centered: true,
         },
     },
     "17x17 Sign Insert": {
-        width: "16.2in",
-        height: "10.2in",
-        marginOffset: "0.35in",
-        title1: { fontSize: "22mm", x: "0", y: "64mm", centered: true },
-        title2: { fontSize: "22mm", x: "0", y: "86mm", centered: true },
-        extras: { fontSize: "14mm", x: "0", y: "205mm", centered: true },
+        width: "17in",
+        height: "11in",
+        title1: { fontSize: "22mm", x: "0", y: "65mm", centered: true },
+        title2: { fontSize: "22mm", x: "0", y: "87mm", centered: true },
+        extras: { fontSize: "14mm", x: "0", y: "206mm", centered: true },
         price: {
             fontSize: "126mm",
             fontSizeWithExtras: "117mm",
             x: "0",
-            dollarsY: "198mm",
-            dollarsYWithExtras: "190mm",
-            centsY: "154mm",
+            dollarsY: "199mm",
+            dollarsYWithExtras: "191mm",
+            centsY: "155mm",
             centered: true,
             margin: "6in",
         },
@@ -232,20 +225,20 @@ export const signConfigs: { [key: string]: SignConfig } = {
             fontSize: "24mm",
             fontSizeWithExtras: "16mm",
             x: "0",
-            y: "221mm",
+            y: "222mm",
             centered: true,
         },
         barcode: {
             width: 2,
             height: 14,
             fontSize: 20,
-            x: "315mm",
-            y: "224mm",
+            x: "325mm",
+            y: "225mm",
         },
         endDate: {
             fontSize: "8mm",
             x: "0",
-            y: "232mm",
+            y: "233mm",
             centered: true,
         },
     },
