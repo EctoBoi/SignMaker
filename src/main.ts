@@ -1,4 +1,5 @@
 import * as signMaker from "./sign-maker.ts";
+import { createSignCanvas } from "./sign-maker-2.ts";
 import { xToPx, resolution, mirrorCanvas } from "./canvas-utils.ts";
 
 // DOM References and Event Listeners
@@ -49,6 +50,18 @@ typesSelect.addEventListener("change", () => {
         formMirror.style.visibility = "visible";
     }
 });
+
+function addTestData() {
+    title1Input.value = "Test Title";
+    title2Input.value = "Test Subtitle";
+    extrasInput.value = "Test Extras";
+    skuInput.value = "1234567";
+    priceInput.value = "19.98";
+    regPriceInput.value = "29.99";
+    endDateInput.value = "2026-12-31";
+}
+
+addTestData();
 
 export type SignInfo = {
     type: string;
@@ -138,7 +151,7 @@ async function createSign() {
 
     if (signInfo.type === "3.25x5.75 Hang Tag") signCanvas = await signMaker.create3x5HangTag(signInfo);
 
-    if (signInfo.type === "4x4 Fact Tag") signCanvas = await signMaker.create4x4FactTag(signInfo);
+    if (signInfo.type === "4x4 Fact Tag") signCanvas = await createSignCanvas(signInfo);
 
     if (signInfo.type === "4.5x2.75 Binocular") signCanvas = await signMaker.create4x2Binocular(signInfo);
 
@@ -159,8 +172,6 @@ async function createSign() {
         canvasDiv.replaceChildren(signCanvas);
 
         showPrintControls();
-    } else {
-        alert("Sign Type Not Supported");
     }
 }
 

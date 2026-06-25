@@ -145,29 +145,29 @@ export async function create3x5HangTag(signInfo: SignInfo): Promise<HTMLCanvasEl
     ctx.textBaseline = "alphabetic";
 
     //border
-
+    const lineLength = xToPx("10mm");
     ctx.beginPath();
-    ctx.moveTo(xToPx("10mm"), 0);
+    ctx.moveTo(lineLength, 0);
     ctx.lineTo(0, 0);
-    ctx.lineTo(0, xToPx("10mm"));
+    ctx.lineTo(0, lineLength);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(xToPx("10mm"), canvasHeight);
+    ctx.moveTo(lineLength, canvasHeight);
     ctx.lineTo(0, canvasHeight);
-    ctx.lineTo(0, canvasHeight - xToPx("10mm"));
+    ctx.lineTo(0, canvasHeight - lineLength);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(canvasWidth - xToPx("10mm"), 0);
+    ctx.moveTo(canvasWidth - lineLength, 0);
     ctx.lineTo(canvasWidth, 0);
-    ctx.lineTo(canvasWidth, xToPx("10mm"));
+    ctx.lineTo(canvasWidth, lineLength);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(canvasWidth - xToPx("10mm"), canvasHeight);
+    ctx.moveTo(canvasWidth - lineLength, canvasHeight);
     ctx.lineTo(canvasWidth, canvasHeight);
-    ctx.lineTo(canvasWidth, canvasHeight - xToPx("10mm"));
+    ctx.lineTo(canvasWidth, canvasHeight - lineLength);
     ctx.stroke();
 
     //text1
@@ -231,6 +231,8 @@ export async function create3x5HangTag(signInfo: SignInfo): Promise<HTMLCanvasEl
             width: 1,
             height: 6,
             fontSize: 12,
+            margin: 0,
+            textMargin: 0,
             xmlDocument: document,
         });
         const xml = new XMLSerializer().serializeToString(svgNode);
@@ -240,7 +242,7 @@ export async function create3x5HangTag(signInfo: SignInfo): Promise<HTMLCanvasEl
 
         await new Promise((resolve) => {
             img.onload = function () {
-                ctx.drawImage(img, xToPx("54mm") - img.width / 2, xToPx("69mm"));
+                ctx.drawImage(img, xToPx("54mm") - img.width / 2, xToPx("72mm"));
                 resolve(null);
             };
         });
@@ -348,6 +350,8 @@ export async function create4x4FactTag(signInfo: SignInfo): Promise<HTMLCanvasEl
             width: 1.4,
             height: 8,
             fontSize: 13,
+            margin: 0,
+            textMargin: 0,
             xmlDocument: document,
         });
         const xml = new XMLSerializer().serializeToString(svgNode);
@@ -357,7 +361,7 @@ export async function create4x4FactTag(signInfo: SignInfo): Promise<HTMLCanvasEl
 
         await new Promise((resolve) => {
             img.onload = () => {
-                ctx.drawImage(img, xToPx("74mm") - img.width / 2, xToPx("73mm"));
+                ctx.drawImage(img, xToPx("74mm") - img.width / 2, xToPx("76mm"));
                 resolve(null);
             };
         });
@@ -583,6 +587,8 @@ export async function create11x11SignInsert(signInfo: SignInfo): Promise<HTMLCan
             width: 1.4,
             height: 8,
             fontSize: 13,
+            margin: 0,
+            textMargin: 0,
             xmlDocument: document,
         });
         const xml = new XMLSerializer().serializeToString(svgNode);
@@ -592,7 +598,7 @@ export async function create11x11SignInsert(signInfo: SignInfo): Promise<HTMLCan
 
         await new Promise((resolve) => {
             img.onload = () => {
-                ctx.drawImage(img, xToPx("205mm") - img.width / 2, xToPx("179mm") - o);
+                ctx.drawImage(img, xToPx("205mm") - img.width / 2, xToPx("181mm") - o);
                 resolve(null);
             };
         });
