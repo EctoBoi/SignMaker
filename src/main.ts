@@ -56,6 +56,7 @@ typesSelect.addEventListener("change", () => {
     }
 });
 
+/*
 function addTestData() {
     title1Input.value = "Test Title";
     title2Input.value = "Test Subtitle";
@@ -67,6 +68,7 @@ function addTestData() {
 }
 
 addTestData();
+*/
 
 export type SignInfo = {
     type: string;

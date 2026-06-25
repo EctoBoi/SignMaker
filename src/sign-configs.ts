@@ -117,8 +117,8 @@ export const signConfigs: { [key: string]: SignConfig } = {
         },
         regPrice: {
             fontSize: "4mm",
-            x: "18mm",
-            y: "87mm",
+            x: "25mm",
+            y: "87.5mm",
             centered: false,
         },
         barcode: {
@@ -129,9 +129,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
             y: "76mm",
         },
         endDate: {
+            fontSize: "4mm",
             x: "74mm",
             y: "87mm",
-            fontSize: "4mm",
             centered: false,
         },
     },
@@ -150,7 +150,7 @@ export const signConfigs: { [key: string]: SignConfig } = {
         },
         regPrice: {
             fontSize: "4mm",
-            x: "92mm",
+            x: "93mm",
             y: "62mm",
             centered: false,
         },
@@ -162,9 +162,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
             y: "60mm",
         },
         endDate: {
+            fontSize: "3.5mm",
             x: "0",
             y: "62mm",
-            fontSize: "3.5mm",
             centered: true,
         },
     },
