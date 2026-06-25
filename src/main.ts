@@ -129,22 +129,22 @@ function getSignInfo(): SignInfo {
     };
 }
 
-function createSign() {
+async function createSign() {
     lastCreatedSign = { type: null, canvas: null };
     const signInfo = getSignInfo();
     let signCanvas: HTMLCanvasElement | null = null;
 
-    if (signInfo.type === "2x4 Hang Tag") signCanvas = signMaker.create2x4HangTag(signInfo);
+    if (signInfo.type === "2x4 Hang Tag") signCanvas = await signMaker.create2x4HangTag(signInfo);
 
-    if (signInfo.type === "3.25x5.75 Hang Tag") signCanvas = signMaker.create3x5HangTag(signInfo);
+    if (signInfo.type === "3.25x5.75 Hang Tag") signCanvas = await signMaker.create3x5HangTag(signInfo);
 
-    if (signInfo.type === "4x4 Fact Tag") signCanvas = signMaker.create4x4FactTag(signInfo);
+    if (signInfo.type === "4x4 Fact Tag") signCanvas = await signMaker.create4x4FactTag(signInfo);
 
-    if (signInfo.type === "4.5x2.75 Binocular") signCanvas = signMaker.create4x2Binocular(signInfo);
+    if (signInfo.type === "4.5x2.75 Binocular") signCanvas = await signMaker.create4x2Binocular(signInfo);
 
-    if (signInfo.type === "11x11 Sign Insert") signCanvas = signMaker.create11x11SignInsert(signInfo);
+    if (signInfo.type === "11x11 Sign Insert") signCanvas = await signMaker.create11x11SignInsert(signInfo);
 
-    if (signInfo.type === "17x17 Sign Insert") signCanvas = signMaker.create17x17SignInsert(signInfo);
+    if (signInfo.type === "17x17 Sign Insert") signCanvas = await signMaker.create17x17SignInsert(signInfo);
 
     if (signCanvas) {
         if (mirrorCheckbox.checked && signInfo.type !== "11x11 Sign Insert" && signInfo.type !== "17x17 Sign Insert") {

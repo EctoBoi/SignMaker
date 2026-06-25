@@ -5,7 +5,7 @@ import { SignInfo } from "./main.ts";
 const defaultBorderWidth = "2";
 const font = "Impact";
 
-export function create2x4HangTag(signInfo: SignInfo): HTMLCanvasElement {
+export async function create2x4HangTag(signInfo: SignInfo): Promise<HTMLCanvasElement> {
     const canvasWidth = xToPx("48mm");
     const canvasHeight = xToPx("52mm");
 
@@ -90,14 +90,6 @@ export function create2x4HangTag(signInfo: SignInfo): HTMLCanvasElement {
     ctx.font = centsSize + "px " + font;
     ctx.fillText(signInfo.cents, canvasWidth / 2 + priceWidth / 2 - centsWidth, xToPx("27mm") - priceOffset);
 
-    //sale ends
-    function saleEnds() {
-        if (signInfo.endDate !== "") {
-            ctx.font = xToPx("4mm") + "px " + font;
-            ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("44mm"));
-        }
-    }
-
     //sku
     if (signInfo.sku !== "") {
         const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -116,13 +108,18 @@ export function create2x4HangTag(signInfo: SignInfo): HTMLCanvasElement {
         const img = new Image();
         img.src = base64;
 
-        img.onload = function () {
-            ctx.drawImage(img, xToPx("36mm") - img.width / 2, xToPx("46mm"));
+        await new Promise((resolve) => {
+            img.onload = function () {
+                ctx.drawImage(img, xToPx("36mm") - img.width / 2, xToPx("46mm"));
+                resolve(null);
+            };
+        });
+    }
 
-            saleEnds();
-        };
-    } else {
-        saleEnds();
+    //sale ends
+    if (signInfo.endDate !== "") {
+        ctx.font = xToPx("4mm") + "px " + font;
+        ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("44mm"));
     }
 
     //reg
@@ -134,7 +131,7 @@ export function create2x4HangTag(signInfo: SignInfo): HTMLCanvasElement {
     return c;
 }
 
-export function create3x5HangTag(signInfo: SignInfo): HTMLCanvasElement {
+export async function create3x5HangTag(signInfo: SignInfo): Promise<HTMLCanvasElement> {
     const canvasWidth = xToPx("2.875in");
     const canvasHeight = xToPx("3.1875in");
 
@@ -220,11 +217,9 @@ export function create3x5HangTag(signInfo: SignInfo): HTMLCanvasElement {
     ctx.fillText(signInfo.cents, canvasWidth / 2 + priceWidth / 2 - centsWidth, xToPx("39mm") - priceOffset);
 
     //sale ends
-    function saleEnds() {
-        if (signInfo.endDate !== "") {
-            ctx.font = xToPx("4mm") + "px " + font;
-            ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("64mm"));
-        }
+    if (signInfo.endDate !== "") {
+        ctx.font = xToPx("4mm") + "px " + font;
+        ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("64mm"));
     }
 
     //sku
@@ -243,13 +238,12 @@ export function create3x5HangTag(signInfo: SignInfo): HTMLCanvasElement {
         const img = new Image();
         img.src = base64;
 
-        img.onload = function () {
-            ctx.drawImage(img, xToPx("54mm") - img.width / 2, xToPx("69mm"));
-
-            saleEnds();
-        };
-    } else {
-        saleEnds();
+        await new Promise((resolve) => {
+            img.onload = function () {
+                ctx.drawImage(img, xToPx("54mm") - img.width / 2, xToPx("69mm"));
+                resolve(null);
+            };
+        });
     }
 
     //reg
@@ -261,7 +255,7 @@ export function create3x5HangTag(signInfo: SignInfo): HTMLCanvasElement {
     return c;
 }
 
-export function create4x4FactTag(signInfo: SignInfo): HTMLCanvasElement {
+export async function create4x4FactTag(signInfo: SignInfo): Promise<HTMLCanvasElement> {
     const canvasWidth = xToPx("4in");
     const canvasHeight = xToPx("4in");
 
@@ -345,14 +339,6 @@ export function create4x4FactTag(signInfo: SignInfo): HTMLCanvasElement {
     ctx.font = centsSize + "px " + font;
     ctx.fillText(signInfo.cents, canvasWidth / 2 + priceWidth / 2 - centsWidth, xToPx("45mm") - priceOffset);
 
-    //sale ends
-    function saleEnds() {
-        if (signInfo.endDate !== "") {
-            ctx.font = xToPx("4mm") + "px " + font;
-            ctx.fillText("Sale Ends " + signInfo.endDate, xToPx("74mm") - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("87mm"));
-        }
-    }
-
     //sku
     if (signInfo.sku !== "") {
         const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -369,17 +355,22 @@ export function create4x4FactTag(signInfo: SignInfo): HTMLCanvasElement {
         const img = new Image();
         img.src = base64;
 
-        img.onload = function () {
-            ctx.drawImage(img, xToPx("74mm") - img.width / 2, xToPx("73mm"));
-
-            saleEnds();
-        };
-    } else {
-        saleEnds();
+        await new Promise((resolve) => {
+            img.onload = () => {
+                ctx.drawImage(img, xToPx("74mm") - img.width / 2, xToPx("73mm"));
+                resolve(null);
+            };
+        });
     }
 
-    //extras
+    //sale ends
+    if (signInfo.endDate !== "") {
+        ctx.font = xToPx("4mm") + "px " + font;
+        ctx.fillText("Sale Ends " + signInfo.endDate, xToPx("74mm") - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("87mm"));
+    }
+
     if (signInfo.extras !== "") {
+        //extras
         ctx.font = xToPx("5mm") + "px " + font;
         ctx.fillText(signInfo.extras, canvasWidth / 2 - ctx.measureText(signInfo.extras).width / 2, xToPx("68mm"));
     }
@@ -393,7 +384,7 @@ export function create4x4FactTag(signInfo: SignInfo): HTMLCanvasElement {
     return c;
 }
 
-export function create4x2Binocular(signInfo: SignInfo): HTMLCanvasElement {
+export async function create4x2Binocular(signInfo: SignInfo): Promise<HTMLCanvasElement> {
     const canvasWidth = xToPx("4.5in");
     const canvasHeight = xToPx("2.70in");
 
@@ -479,11 +470,9 @@ export function create4x2Binocular(signInfo: SignInfo): HTMLCanvasElement {
     ctx.fillText(signInfo.cents, xToPx("80mm") + priceWidth / 2 - centsWidth, xToPx("49mm") - priceOffset);
 
     //sale ends
-    function saleEnds() {
-        if (signInfo.endDate !== "") {
-            ctx.font = xToPx("3.5mm") + "px " + font;
-            ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("62mm"));
-        }
+    if (signInfo.endDate !== "") {
+        ctx.font = xToPx("3.5mm") + "px " + font;
+        ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("62mm"));
     }
 
     //sku
@@ -504,13 +493,12 @@ export function create4x2Binocular(signInfo: SignInfo): HTMLCanvasElement {
         const img = new Image();
         img.src = base64;
 
-        img.onload = function () {
-            ctx.drawImage(img, xToPx("20mm") - img.width / 2, xToPx("60mm"));
-
-            saleEnds();
-        };
-    } else {
-        saleEnds();
+        await new Promise((resolve) => {
+            img.onload = () => {
+                ctx.drawImage(img, xToPx("20mm") - img.width / 2, xToPx("60mm"));
+                resolve(null);
+            };
+        });
     }
 
     //reg
@@ -522,7 +510,7 @@ export function create4x2Binocular(signInfo: SignInfo): HTMLCanvasElement {
     return c;
 }
 
-export function create11x11SignInsert(signInfo: SignInfo): HTMLCanvasElement {
+export async function create11x11SignInsert(signInfo: SignInfo): Promise<HTMLCanvasElement> {
     const o = xToPx("0.45in"); //margin offset
     const canvasWidth = xToPx("10.2in");
     const canvasHeight = xToPx("7.6in");
@@ -581,11 +569,9 @@ export function create11x11SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     ctx.fillText(signInfo.cents, canvasWidth / 2 + priceWidth / 2 - centsWidth, xToPx("136mm") - o - priceOffset);
 
     //sale ends
-    function saleEnds() {
-        if (signInfo.endDate !== "") {
-            ctx.font = xToPx("6mm") + "px " + font;
-            ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("184mm") - o);
-        }
+    if (signInfo.endDate !== "") {
+        ctx.font = xToPx("6mm") + "px " + font;
+        ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("184mm") - o);
     }
 
     //sku
@@ -604,13 +590,12 @@ export function create11x11SignInsert(signInfo: SignInfo): HTMLCanvasElement {
         const img = new Image();
         img.src = base64;
 
-        img.onload = function () {
-            ctx.drawImage(img, xToPx("205mm") - img.width / 2, xToPx("179mm") - o);
-
-            saleEnds();
-        };
-    } else {
-        saleEnds();
+        await new Promise((resolve) => {
+            img.onload = () => {
+                ctx.drawImage(img, xToPx("205mm") - img.width / 2, xToPx("179mm") - o);
+                resolve(null);
+            };
+        });
     }
 
     //extras
@@ -632,7 +617,7 @@ export function create11x11SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     return c;
 }
 
-export function create17x17SignInsert(signInfo: SignInfo): HTMLCanvasElement {
+export async function create17x17SignInsert(signInfo: SignInfo): Promise<HTMLCanvasElement> {
     const o = xToPx("0.35in"); //margin offset
     const canvasWidth = xToPx("16.2in");
     const canvasHeight = xToPx("10.2in");
@@ -692,11 +677,9 @@ export function create17x17SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     ctx.fillText(signInfo.cents, canvasWidth / 2 + priceWidth / 2 - centsWidth, xToPx("154mm") - o - priceOffset);
 
     //sale ends
-    function saleEnds() {
-        if (signInfo.endDate !== "") {
-            ctx.font = xToPx("8mm") + "px " + font;
-            ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("232mm") - o);
-        }
+    if (signInfo.endDate !== "") {
+        ctx.font = xToPx("8mm") + "px " + font;
+        ctx.fillText("Sale Ends " + signInfo.endDate, canvasWidth / 2 - ctx.measureText("Sale Ends " + signInfo.endDate).width / 2, xToPx("232mm") - o);
     }
 
     //sku
@@ -717,13 +700,12 @@ export function create17x17SignInsert(signInfo: SignInfo): HTMLCanvasElement {
         const img = new Image();
         img.src = base64;
 
-        img.onload = function () {
-            ctx.drawImage(img, xToPx("315mm") - img.width / 2, xToPx("224mm") - o);
-
-            saleEnds();
-        };
-    } else {
-        saleEnds();
+        await new Promise((resolve) => {
+            img.onload = function () {
+                ctx.drawImage(img, xToPx("315mm") - img.width / 2, xToPx("224mm") - o);
+                resolve(null);
+            };
+        });
     }
 
     //extras
