@@ -72,9 +72,8 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
 
     //price
     let priceWidth = 0;
-    let dollorsSize =
-        signInfo.extras && config.price.dollarsFontSizeWithExtras ? xToPx(config.price.dollarsFontSizeWithExtras) : xToPx(config.price.dollarsFontSize);
-    let centsSize = xToPx(config.price.centsFontSize);
+    let dollorsSize = signInfo.extras && config.price.fontSizeWithExtras ? xToPx(config.price.fontSizeWithExtras) : xToPx(config.price.fontSize);
+    let centsSize = dollorsSize / 2;
 
     ctx.font = dollorsSize + "px " + font;
     let dollarsWidth = ctx.measureText(signInfo.dollars).width;
@@ -85,9 +84,9 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
 
     let priceOffset = 0;
 
-    for (let i = 0; priceWidth > canvasWidth - xToPx(config.price.margin); i++) {
+    while (priceWidth > canvasWidth - xToPx(config.price.margin)) {
         dollorsSize--;
-        centsSize--;
+        centsSize -= 0.7;
         priceOffset++;
         priceWidth = 0;
         ctx.font = dollorsSize + "px " + font;

@@ -7,9 +7,8 @@ export type SignConfig = {
     title2?: { fontSize: string; x: string; y: string; centered: boolean };
     extras?: { fontSize: string; x: string; y: string; centered: boolean };
     price: {
-        dollarsFontSize: string;
-        dollarsFontSizeWithExtras?: string;
-        centsFontSize: string;
+        fontSize: string;
+        fontSizeWithExtras?: string;
         x: string;
         dollarsY: string;
         dollarsYWithExtras?: string;
@@ -42,8 +41,7 @@ export const signConfigs: { [key: string]: SignConfig } = {
         title1: { fontSize: "5mm", x: "0", y: "7mm", centered: true },
         title2: { fontSize: "5mm", x: "0", y: "12mm", centered: true },
         price: {
-            dollarsFontSize: "23mm",
-            centsFontSize: "11.5mm",
+            fontSize: "23mm",
             x: "0",
             dollarsY: "34mm",
             centsY: "27mm",
@@ -78,13 +76,12 @@ export const signConfigs: { [key: string]: SignConfig } = {
         title1: { fontSize: "7mm", x: "0", y: "12mm", centered: true },
         title2: { fontSize: "7mm", x: "0", y: "19mm", centered: true },
         price: {
-            dollarsFontSize: "31mm",
-            centsFontSize: "15.5mm",
+            fontSize: "31mm",
             x: "0",
             dollarsY: "49mm",
             centsY: "39mm",
             centered: true,
-            margin: "2mm",
+            margin: "10mm",
         },
         regPrice: {
             fontSize: "6mm",
@@ -115,8 +112,7 @@ export const signConfigs: { [key: string]: SignConfig } = {
         title2: { fontSize: "9mm", x: "0", y: "21mm", centered: true },
         extras: { fontSize: "5mm", x: "0", y: "68mm", centered: true },
         price: {
-            dollarsFontSize: "30mm",
-            centsFontSize: "15mm",
+            fontSize: "30mm",
             x: "0",
             dollarsY: "55mm",
             centsY: "45mm",
@@ -150,8 +146,7 @@ export const signConfigs: { [key: string]: SignConfig } = {
         borderLineLength: "10mm",
         title1: { fontSize: "8mm", x: "0", y: "36mm", centered: true },
         price: {
-            dollarsFontSize: "24mm",
-            centsFontSize: "12mm",
+            fontSize: "24mm",
             x: "80mm",
             dollarsY: "57mm",
             centsY: "49mm",
@@ -186,9 +181,8 @@ export const signConfigs: { [key: string]: SignConfig } = {
         title2: { fontSize: "13mm", x: "0", y: "90mm", centered: true },
         extras: { fontSize: "8mm", x: "0", y: "167mm", centered: true },
         price: {
-            dollarsFontSize: "80mm",
-            dollarsFontSizeWithExtras: "75mm",
-            centsFontSize: "40mm",
+            fontSize: "80mm",
+            fontSizeWithExtras: "75mm",
             x: "0",
             dollarsY: "162mm",
             dollarsYWithExtras: "158mm",
@@ -225,9 +219,8 @@ export const signConfigs: { [key: string]: SignConfig } = {
         title2: { fontSize: "22mm", x: "0", y: "86mm", centered: true },
         extras: { fontSize: "14mm", x: "0", y: "205mm", centered: true },
         price: {
-            dollarsFontSize: "126mm",
-            dollarsFontSizeWithExtras: "117mm",
-            centsFontSize: "63mm",
+            fontSize: "126mm",
+            fontSizeWithExtras: "117mm",
             x: "0",
             dollarsY: "198mm",
             dollarsYWithExtras: "190mm",
