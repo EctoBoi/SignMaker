@@ -20,3 +20,17 @@ export function xToPx(x: string): number {
     document.body.removeChild(div);
     return px;
 }
+
+export function mirrorCanvas(originalCanvas: HTMLCanvasElement): HTMLCanvasElement {
+    const mirroredCanvas = document.createElement("canvas");
+    mirroredCanvas.width = originalCanvas.width;
+    mirroredCanvas.height = originalCanvas.height * 2;
+    const ctx = mirroredCanvas.getContext("2d") as CanvasRenderingContext2D;
+    ctx.drawImage(originalCanvas, 0, 0);
+    ctx.save();
+    ctx.translate(originalCanvas.width, originalCanvas.height * 2);
+    ctx.scale(-1, -1);
+    ctx.drawImage(originalCanvas, 0, 0);
+    ctx.restore();
+    return mirroredCanvas;
+}

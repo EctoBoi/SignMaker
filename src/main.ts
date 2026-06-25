@@ -1,5 +1,5 @@
 import * as signMaker from "./sign-maker.ts";
-import { xToPx, resolution } from "./canvas-utils.ts";
+import { xToPx, resolution, mirrorCanvas } from "./canvas-utils.ts";
 
 // DOM References and Event Listeners
 const fillInfoButton = document.getElementById("fillInfoButton") as HTMLButtonElement;
@@ -14,11 +14,13 @@ const regPriceInput = document.getElementById("regPrice") as HTMLInputElement;
 const endDateInput = document.getElementById("endDate") as HTMLInputElement;
 const copiesInput = document.getElementById("copies") as HTMLInputElement;
 const createButton = document.getElementById("createButton") as HTMLButtonElement;
+const mirrorCheckbox = document.getElementById("mirror") as HTMLInputElement;
 const printButton = document.getElementById("printButton") as HTMLButtonElement;
 
 const canvasDiv = document.getElementById("canvasDiv") as HTMLDivElement;
 const formExtras = document.getElementById("formExtras") as HTMLDivElement;
 const formBatchSelect = document.getElementById("formBatchSelect") as HTMLDivElement;
+const formMirror = document.getElementById("formMirror") as HTMLDivElement;
 
 const saveToBatchButton = document.getElementById("saveToBatch") as HTMLButtonElement;
 const batchSelect = document.getElementById("selectBatch") as HTMLSelectElement;
@@ -40,6 +42,11 @@ typesSelect.addEventListener("change", () => {
         formExtras.style.display = "flex";
     } else {
         formExtras.style.display = "none";
+    }
+    if (signtype === "11x11 Sign Insert" || signtype === "17x17 Sign Insert") {
+        formMirror.style.visibility = "hidden";
+    } else {
+        formMirror.style.visibility = "visible";
     }
 });
 
@@ -127,39 +134,34 @@ function createSign() {
     const signInfo = getSignInfo();
     let signCanvas: HTMLCanvasElement | null = null;
 
-    if (signInfo.type === "2x4 Hang Tag") {
-        signCanvas = signMaker.create2x4HangTag(signInfo);
-        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
-    }
-    if (signInfo.type === "3.25x5.75 Hang Tag") {
-        signCanvas = signMaker.create3x5HangTag(signInfo);
-        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
-    }
-    if (signInfo.type === "4x4 Fact Tag") {
-        signCanvas = signMaker.create4x4FactTag(signInfo);
-        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
-    }
-    if (signInfo.type === "4.5x2.75 Binocular") {
-        signCanvas = signMaker.create4x2Binocular(signInfo);
-        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
-    }
-    if (signInfo.type === "11x11 Sign Insert") {
-        signCanvas = signMaker.create11x11SignInsert(signInfo);
-        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
-    }
-    if (signInfo.type === "17x17 Sign Insert") {
-        signCanvas = signMaker.create17x17SignInsert(signInfo);
-        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
-    }
+    if (signInfo.type === "2x4 Hang Tag") signCanvas = signMaker.create2x4HangTag(signInfo);
+
+    if (signInfo.type === "3.25x5.75 Hang Tag") signCanvas = signMaker.create3x5HangTag(signInfo);
+
+    if (signInfo.type === "4x4 Fact Tag") signCanvas = signMaker.create4x4FactTag(signInfo);
+
+    if (signInfo.type === "4.5x2.75 Binocular") signCanvas = signMaker.create4x2Binocular(signInfo);
+
+    if (signInfo.type === "11x11 Sign Insert") signCanvas = signMaker.create11x11SignInsert(signInfo);
+
+    if (signInfo.type === "17x17 Sign Insert") signCanvas = signMaker.create17x17SignInsert(signInfo);
 
     if (signCanvas) {
+        if (mirrorCheckbox.checked && signInfo.type !== "11x11 Sign Insert" && signInfo.type !== "17x17 Sign Insert") {
+            signCanvas = mirrorCanvas(signCanvas);
+            signCanvas.className = "signCanvas";
+        }
+        lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
+
         const scaleFactor = signInfo.type === "17x17 Sign Insert" ? 0.6 : signInfo.type === "11x11 Sign Insert" ? 0.8 : 1;
         signCanvas.style.width = (signCanvas.width / resolution) * scaleFactor + "px";
         signCanvas.style.height = (signCanvas.height / resolution) * scaleFactor + "px";
         canvasDiv.replaceChildren(signCanvas);
-    }
 
-    showPrintControls();
+        showPrintControls();
+    } else {
+        alert("Sign Type Not Supported");
+    }
 }
 
 function print() {
@@ -167,6 +169,7 @@ function print() {
         alert("No Sign Created");
         return;
     }
+
     const img = new Image();
     img.id = "tempPrintImage";
     img.src = lastCreatedSign.canvas.toDataURL("image/png");

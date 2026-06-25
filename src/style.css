@@ -87,11 +87,12 @@ select:hover {
     width: 60px;
 }
 
-#createButton {
-    margin-right: 150px;
+#formMirror {
+    width: 60px;
+    margin-right: 84px;
 }
 
-#signCanvas {
+.signCanvas {
     background-color: white;
     border: 1px solid black;
 }

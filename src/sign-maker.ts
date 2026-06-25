@@ -10,7 +10,7 @@ export function create2x4HangTag(signInfo: SignInfo): HTMLCanvasElement {
     const canvasHeight = xToPx("52mm");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
-    c.id = "signCanvas";
+    c.className = "signCanvas";
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -139,7 +139,7 @@ export function create3x5HangTag(signInfo: SignInfo): HTMLCanvasElement {
     const canvasHeight = xToPx("3.1875in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
-    c.id = "signCanvas";
+    c.className = "signCanvas";
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -266,7 +266,7 @@ export function create4x4FactTag(signInfo: SignInfo): HTMLCanvasElement {
     const canvasHeight = xToPx("4in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
-    c.id = "signCanvas";
+    c.className = "signCanvas";
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -398,7 +398,7 @@ export function create4x2Binocular(signInfo: SignInfo): HTMLCanvasElement {
     const canvasHeight = xToPx("2.70in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
-    c.id = "signCanvas";
+    c.className = "signCanvas";
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -528,7 +528,7 @@ export function create11x11SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     const canvasHeight = xToPx("7.6in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
-    c.id = "signCanvas";
+    c.className = "signCanvas";
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -638,7 +638,7 @@ export function create17x17SignInsert(signInfo: SignInfo): HTMLCanvasElement {
     const canvasHeight = xToPx("10.2in");
 
     const c = createHiDPICanvas(canvasWidth, canvasHeight);
-    c.id = "signCanvas";
+    c.className = "signCanvas";
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
