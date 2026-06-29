@@ -1,5 +1,6 @@
 import { createSignCanvas } from "./sign-maker.ts";
-import { xToPx, resolution, mirrorCanvas } from "./canvas-utils.ts";
+import { resolution, mirrorCanvas } from "./canvas-utils.ts";
+import { signConfigs } from "./sign-configs.ts";
 
 // DOM References and Event Listeners
 const fillInfoButton = document.getElementById("fillInfoButton") as HTMLButtonElement;
@@ -38,25 +39,24 @@ printBatchButton.addEventListener("click", printBatch);
 batchSelect.addEventListener("change", loadBatchPreview);
 
 typesSelect.addEventListener("change", () => {
-    const signtype = typesSelect.value;
-    if (signtype === "11x11 Sign Insert" || signtype === "17x17 Sign Insert" || signtype === "4x4 Fact Tag") {
+    const currentSignConfig = signConfigs[typesSelect.value];
+    if (currentSignConfig.extras) {
         formExtras.style.display = "flex";
     } else {
         formExtras.style.display = "none";
     }
-    if (signtype === "11x11 Sign Insert" || signtype === "17x17 Sign Insert") {
+    if (currentSignConfig.title2) {
+        formTitle2.style.display = "flex";
+    } else {
+        formTitle2.style.display = "none";
+    }
+    if (currentSignConfig.allowMirror === false) {
         formMirror.style.visibility = "hidden";
     } else {
         formMirror.style.visibility = "visible";
     }
-    if (signtype === "4.5x2.75 Binocular") {
-        formTitle2.style.display = "none";
-    } else {
-        formTitle2.style.display = "flex";
-    }
 });
 
-/*
 function addTestData() {
     title1Input.value = "Test Title";
     title2Input.value = "Test Subtitle";
@@ -68,7 +68,6 @@ function addTestData() {
 }
 
 addTestData();
-*/
 
 export type SignInfo = {
     type: string;
@@ -116,6 +115,21 @@ async function fillFromInfo() {
     }
 }
 
+function fillTypesSelect() {
+    const signTypes = Object.keys(signConfigs);
+
+    signTypes.forEach((type) => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        if (type === "5x7 Sign Insert") {
+            option.selected = true;
+        }
+        typesSelect.appendChild(option);
+    });
+    typesSelect.dispatchEvent(new Event("change"));
+}
+
 function showPrintControls() {
     printButton.style.visibility = "visible";
     saveToBatchButton.style.visibility = "visible";
@@ -156,13 +170,13 @@ async function createSign() {
     let signCanvas: HTMLCanvasElement = await createSignCanvas(signInfo);
 
     if (signCanvas) {
-        if (mirrorCheckbox.checked && signInfo.type !== "11x11 Sign Insert" && signInfo.type !== "17x17 Sign Insert") {
-            signCanvas = mirrorCanvas(signCanvas);
+        if (mirrorCheckbox.checked && signConfigs[signInfo.type].allowMirror !== false) {
+            signCanvas = mirrorCanvas(signCanvas, signConfigs[signInfo.type].mirrorDirection || "vertical");
             signCanvas.className = "signCanvas";
         }
         lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
 
-        const scaleFactor = signInfo.type === "17x17 Sign Insert" ? 0.6 : signInfo.type === "11x11 Sign Insert" ? 0.8 : 1;
+        const scaleFactor = signConfigs[signInfo.type].previewScale || 1;
         signCanvas.style.width = (signCanvas.width / resolution) * scaleFactor + "px";
         signCanvas.style.height = (signCanvas.height / resolution) * scaleFactor + "px";
         canvasDiv.replaceChildren(signCanvas);
@@ -189,7 +203,7 @@ function print() {
         for (let i = 0; i < copies; i++) {
             imgs.push(img);
         }
-        if (lastCreatedSign.type) openPrintWindow(imgs, getSignFormat(lastCreatedSign.type));
+        if (lastCreatedSign.type) openPrintWindow(imgs, signConfigs[lastCreatedSign.type].printOrientation || "portrait");
         else alert("No Sign Created");
     } else {
         setTimeout(print, 300);
@@ -270,8 +284,7 @@ function clearBatch() {
 function printBatch() {
     const currentBatch = batches.find((b) => b.type === batchSelect.value);
     if (currentBatch && currentBatch.signs.length > 0) {
-        const format = getSignFormat(currentBatch.type);
-        openPrintWindow(currentBatch.signs, format);
+        openPrintWindow(currentBatch.signs, signConfigs[currentBatch.type].printOrientation || "portrait");
     } else {
         alert("Batch Empty");
     }
@@ -290,7 +303,7 @@ function loadBatchPreview() {
             previewImg.title = "Click to Remove from Batch";
             previewImg.style.backgroundColor = "white";
             previewImg.style.border = "1px solid black";
-            const scaleFactor = currentBatch.type === "17x17 Sign Insert" ? 0.6 : currentBatch.type === "11x11 Sign Insert" ? 0.8 : 1;
+            const scaleFactor = signConfigs[currentBatch.type].previewScale || 1;
             previewImg.width = previewImg.width * scaleFactor;
             previewImg.height = previewImg.height * scaleFactor;
 
@@ -312,24 +325,7 @@ function removeFromBatch(this: HTMLImageElement) {
     }
 }
 
-function getSignFormat(signName: string): { orientation: string; width: number } {
-    let orientation = "portrait";
-    let width: number = 0;
-
-    if (signName === "2x4 Hang Tag" || signName === "3.25x5.75 Hang Tag" || signName === "4x4 Fact Tag") {
-        width = xToPx("8.5in");
-    } else if (signName === "4.5x2.75 Binocular" || signName === "11x11 Sign Insert") {
-        width = xToPx("11in");
-        orientation = "landscape";
-    } else if (signName === "17x17 Sign Insert") {
-        width = xToPx("17in");
-        orientation = "landscape";
-    }
-
-    return { orientation: orientation, width: width };
-}
-
-function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string; width: number }) {
+function openPrintWindow(imgs: HTMLImageElement[], orientation: "portrait" | "landscape") {
     const WinPrint = window.open("", "", "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0");
 
     if (!WinPrint) {
@@ -348,8 +344,8 @@ function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string
     printStyle.innerHTML = `
             body { margin: 0; }
             @page { 
-                size: ${format.orientation}; 
-                ${format.orientation === "portrait" ? "display: flex;" : ""};
+                size: ${orientation}; 
+                ${orientation === "portrait" ? "display: flex;" : ""};
                 margin: 0;
             }
         </style>`;
@@ -364,3 +360,5 @@ function openPrintWindow(imgs: HTMLImageElement[], format: { orientation: string
         WinPrint.close();
     }, 300);
 }
+
+fillTypesSelect();

@@ -1,7 +1,11 @@
 export type SignConfig = {
     width: string;
     height: string;
+    previewScale?: number;
     borderLineLength?: string;
+    printOrientation: "portrait" | "landscape";
+    allowMirror?: boolean;
+    mirrorDirection?: "horizontal" | "vertical";
     title1: { fontSize: string; x: string; y: string; centered: boolean };
     title2?: { fontSize: string; x: string; y: string; centered: boolean };
     extras?: { fontSize: string; x: string; y: string; centered: boolean };
@@ -36,6 +40,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
         width: "48mm",
         height: "52mm",
         borderLineLength: "3mm",
+        printOrientation: "portrait",
+        allowMirror: true,
+        mirrorDirection: "vertical",
         title1: { fontSize: "5mm", x: "0", y: "7mm", centered: true },
         title2: { fontSize: "5mm", x: "0", y: "12mm", centered: true },
         price: {
@@ -70,6 +77,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
         width: "2.875in",
         height: "3.1875in",
         borderLineLength: "10mm",
+        printOrientation: "portrait",
+        allowMirror: true,
+        mirrorDirection: "vertical",
         title1: { fontSize: "7mm", x: "0", y: "12mm", centered: true },
         title2: { fontSize: "7mm", x: "0", y: "19mm", centered: true },
         price: {
@@ -104,6 +114,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
         width: "4in",
         height: "4in",
         borderLineLength: "10mm",
+        printOrientation: "portrait",
+        allowMirror: true,
+        mirrorDirection: "vertical",
         title1: { fontSize: "9mm", x: "0", y: "12mm", centered: true },
         title2: { fontSize: "9mm", x: "0", y: "21mm", centered: true },
         extras: { fontSize: "5mm", x: "0", y: "68mm", centered: true },
@@ -139,6 +152,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
         width: "4.5in",
         height: "2.70in",
         borderLineLength: "10mm",
+        printOrientation: "portrait",
+        allowMirror: true,
+        mirrorDirection: "vertical",
         title1: { fontSize: "8mm", x: "0", y: "36mm", centered: true },
         price: {
             fontSize: "24mm",
@@ -168,9 +184,53 @@ export const signConfigs: { [key: string]: SignConfig } = {
             centered: true,
         },
     },
+    "5x7 Sign Insert": {
+        width: "5.25in",
+        height: "6.75in",
+        borderLineLength: "10mm",
+        printOrientation: "landscape",
+        allowMirror: true,
+        mirrorDirection: "horizontal",
+        title1: { fontSize: "5.5mm", x: "0", y: "84.5mm", centered: true },
+        title2: { fontSize: "5.5mm", x: "0", y: "90mm", centered: true },
+        extras: { fontSize: "5mm", x: "0", y: "127.5mm", centered: true },
+        price: {
+            fontSize: "38mm",
+            fontSizeWithExtras: "33mm",
+            x: "0",
+            dollarsY: "126mm",
+            dollarsYWithExtras: "122mm",
+            centsY: "113mm",
+            centered: true,
+            margin: "40mm",
+        },
+        regPrice: {
+            fontSize: "6mm",
+            fontSizeWithExtras: "4mm",
+            x: "0",
+            y: "132mm",
+            centered: true,
+        },
+        barcode: {
+            width: 1,
+            height: 6,
+            fontSize: 8,
+            x: "100mm",
+            y: "133mm",
+        },
+        endDate: {
+            fontSize: "2.5mm",
+            x: "0",
+            y: "135mm",
+            centered: true,
+        },
+    },
     "11x11 Sign Insert": {
         width: "11in",
         height: "8.5in",
+        previewScale: 0.8,
+        printOrientation: "landscape",
+        allowMirror: false,
         title1: { fontSize: "13mm", x: "0", y: "76mm", centered: true },
         title2: { fontSize: "13mm", x: "0", y: "89mm", centered: true },
         extras: { fontSize: "8mm", x: "0", y: "166mm", centered: true },
@@ -208,6 +268,9 @@ export const signConfigs: { [key: string]: SignConfig } = {
     "17x17 Sign Insert": {
         width: "17in",
         height: "11in",
+        previewScale: 0.6,
+        printOrientation: "landscape",
+        allowMirror: false,
         title1: { fontSize: "22mm", x: "0", y: "65mm", centered: true },
         title2: { fontSize: "22mm", x: "0", y: "87mm", centered: true },
         extras: { fontSize: "14mm", x: "0", y: "206mm", centered: true },
