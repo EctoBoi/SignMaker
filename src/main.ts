@@ -56,7 +56,13 @@ typesSelect.addEventListener("change", () => {
         formMirror.style.visibility = "visible";
     }
 });
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        createSign();
+    }
+});
 
+/*
 function addTestData() {
     title1Input.value = "Test Title";
     title2Input.value = "Test Subtitle";
@@ -68,6 +74,7 @@ function addTestData() {
 }
 
 addTestData();
+*/
 
 export type SignInfo = {
     type: string;
@@ -122,7 +129,7 @@ function fillTypesSelect() {
         const option = document.createElement("option");
         option.value = type;
         option.textContent = type;
-        if (type === "5x7 Sign Insert") {
+        if (type === "11x11 Sign Insert") {
             option.selected = true;
         }
         typesSelect.appendChild(option);
