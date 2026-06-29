@@ -21,16 +21,27 @@ export function xToPx(x: string): number {
     return px;
 }
 
-export function mirrorCanvas(originalCanvas: HTMLCanvasElement): HTMLCanvasElement {
+export function mirrorCanvas(originalCanvas: HTMLCanvasElement, direction: "horizontal" | "vertical"): HTMLCanvasElement {
     const mirroredCanvas = document.createElement("canvas");
-    mirroredCanvas.width = originalCanvas.width;
-    mirroredCanvas.height = originalCanvas.height * 2;
+    if (direction === "vertical") {
+        mirroredCanvas.width = originalCanvas.width;
+        mirroredCanvas.height = originalCanvas.height * 2;
+    } else if (direction === "horizontal") {
+        mirroredCanvas.width = originalCanvas.width * 2;
+        mirroredCanvas.height = originalCanvas.height;
+    }
     const ctx = mirroredCanvas.getContext("2d") as CanvasRenderingContext2D;
     ctx.drawImage(originalCanvas, 0, 0);
     ctx.save();
-    ctx.translate(originalCanvas.width, originalCanvas.height * 2);
-    ctx.scale(-1, -1);
-    ctx.drawImage(originalCanvas, 0, 0);
+    if (direction === "vertical") {
+        ctx.translate(originalCanvas.width, originalCanvas.height * 2);
+        ctx.scale(-1, -1);
+        ctx.drawImage(originalCanvas, 0, 0);
+    } else if (direction === "horizontal") {
+        console.log("mirroring horizontally");
+        ctx.translate(originalCanvas.width, 0);
+        ctx.drawImage(originalCanvas, 0, 0);
+    }
     ctx.restore();
     return mirroredCanvas;
 }
