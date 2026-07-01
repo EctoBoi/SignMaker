@@ -62,20 +62,6 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-/*
-function addTestData() {
-    title1Input.value = "Test Title";
-    title2Input.value = "Test Subtitle";
-    extrasInput.value = "Test Extras";
-    skuInput.value = "1234567";
-    priceInput.value = "19.98";
-    regPriceInput.value = "29.99";
-    endDateInput.value = "2026-12-31";
-}
-
-addTestData();
-*/
-
 export type SignInfo = {
     type: string;
     title1: string;
@@ -369,3 +355,17 @@ function openPrintWindow(imgs: HTMLImageElement[], orientation: "portrait" | "la
 }
 
 fillTypesSelect();
+
+/*
+function addTestData() {
+    title1Input.value = "Test Title";
+    title2Input.value = "Test Subtitle";
+    extrasInput.value = "Test Extras";
+    skuInput.value = "1234567";
+    priceInput.value = "19.98";
+    regPriceInput.value = "29.99";
+    endDateInput.value = "2026-12-31";
+}
+
+addTestData();
+*/
