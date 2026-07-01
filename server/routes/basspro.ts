@@ -60,15 +60,15 @@ function findMetaValue(asset: MediaAsset, externalId: string): string | undefine
 
 router.get("/product", async (req: Request, res: Response) => {
     try {
-        const partNumber = req.query.partNumber as string;
-        if (!partNumber) {
-            return res.status(400).json({ error: "Missing partNumber param" });
+        const search = req.query.search as string;
+        if (!search) {
+            return res.status(400).json({ error: "Missing search param" });
         }
 
         // Step 1: fetch Coveo token and media assets in parallel
         const [tokenRes, mediaRes] = await Promise.all([
             fetch("https://www.basspro.ca/api/v2/10151/prod/coveo/getCoveoToken"),
-            fetch(`https://www.basspro.ca/wcs/resources/store/10151/cloudinary/getMediaAssets?partNumber=${encodeURIComponent(partNumber)}`),
+            fetch(`https://www.basspro.ca/wcs/resources/store/10151/cloudinary/getMediaAssets?partNumber=${encodeURIComponent(search)}`),
         ]);
 
         if (!tokenRes.ok) {
@@ -88,16 +88,18 @@ router.get("/product", async (req: Request, res: Response) => {
             console.warn("Media assets fetch failed:", mediaRes.status);
         }
 
-        // Step 2: query Coveo for product data by SKU
+        // Step 2: query Coveo for product data — first try exact SKU match, fall back to title/name search
+        const coveoHeaders = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        };
+
         const coveoRes = await fetch("https://platform.cloud.coveo.com/rest/search/v2", {
             method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
+            headers: coveoHeaders,
             body: JSON.stringify({
                 q: "",
-                aq: `@sku==${partNumber}`,
+                aq: `@sku==${search}`,
                 numberOfResults: 1,
             }),
         });
@@ -109,8 +111,31 @@ router.get("/product", async (req: Request, res: Response) => {
             return res.status(coveoRes.status).json({ error: "Failed to fetch product from Coveo" });
         }
 
-        const coveoData = (await coveoRes.json()) as CoveoSearchResponse;
-        const result = coveoData.results?.[0];
+        let coveoData = (await coveoRes.json()) as CoveoSearchResponse;
+        let result = coveoData.results?.[0];
+
+        // If no SKU match, fall back to full-text search by title/product name
+        if (!result) {
+            console.log("No SKU match found; falling back to title/name search for:", search);
+            const fallbackRes = await fetch("https://platform.cloud.coveo.com/rest/search/v2", {
+                method: "POST",
+                headers: coveoHeaders,
+                body: JSON.stringify({
+                    q: search,
+                    numberOfResults: 1,
+                }),
+            });
+
+            if (!fallbackRes.ok) {
+                const errText = await fallbackRes.text();
+                console.error("Coveo fallback error body:", errText);
+                return res.status(404).json({ error: "Product not found" });
+            }
+
+            coveoData = (await fallbackRes.json()) as CoveoSearchResponse;
+            result = coveoData.results?.[0];
+        }
+
         if (!result) {
             return res.status(404).json({ error: "Product not found" });
         }
@@ -129,8 +154,8 @@ router.get("/product", async (req: Request, res: Response) => {
             departmentName: raw.department_name_ca ?? null,
             styleNumber: raw.style_number_ca ?? null,
             availableQuantityCanada: raw.availquantity_ca ?? null,
-            sku: raw.sku ?? partNumber,
-            upc: upc ?? null,
+            sku: raw.sku ?? search,
+            upc: raw.upc_ca ?? upc ?? null,
         });
     } catch (err) {
         console.error(err);

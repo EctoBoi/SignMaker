@@ -64,7 +64,7 @@ typesSelect.addEventListener("change", () => {
 });
 document.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-        createSign();
+        searchBassPro();
     }
 });
 
@@ -97,7 +97,7 @@ let lastCreatedSign: {
 
 async function searchBassPro() {
     try {
-        const res = await fetch(`/api/basspro/product?partNumber=${encodeURIComponent(searchBassProInput.value)}`);
+        const res = await fetch(`/api/basspro/product?search=${encodeURIComponent(searchBassProInput.value)}`);
 
         if (!res.ok) {
             alert("Could not find product");
