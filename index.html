@@ -17,7 +17,16 @@
         <div id="content">
             <h1>Sign Maker</h1>
 
-            <button class="button-87" role="button" id="fillInfoButton">Fill From Info</button>
+            <div id="formSearch">
+                <div class="formInputDiv" id="formSearchBassProInput">
+                    <input type="text" id="searchBassProInput" size="30" />
+                    <button class="button-87" role="button" id="searchBassPro">Search Bass Pro</button>
+                </div>
+            </div>
+            <div style="display: none" id="formSearchResults">
+                <div id="bassProResults" class="product-card"></div>
+                <button class="button-87" role="button" id="fillFromInfoButton">Fill From Info</button>
+            </div>
 
             <div id="form">
                 <div class="col">

@@ -1,9 +1,14 @@
 import { createSignCanvas } from "./sign-maker.ts";
-import { resolution, mirrorCanvas } from "./canvas-utils.ts";
+import { resolution } from "./canvas-utils.ts";
 import { signConfigs } from "./sign-configs.ts";
+import { BassProProduct, renderProductCard } from "./BassProProduct.ts";
 
 // DOM References and Event Listeners
-const fillInfoButton = document.getElementById("fillInfoButton") as HTMLButtonElement;
+const searchBassProButton = document.getElementById("searchBassPro") as HTMLButtonElement;
+const searchBassProInput = document.getElementById("searchBassProInput") as HTMLInputElement;
+const bassProResults = document.getElementById("bassProResults") as HTMLParagraphElement;
+const formSearchResults = document.getElementById("formSearchResults") as HTMLDivElement;
+const fillFromInfoButton = document.getElementById("fillFromInfoButton") as HTMLButtonElement;
 
 const typesSelect = document.getElementById("types") as HTMLSelectElement;
 const title1Input = document.getElementById("title1") as HTMLInputElement;
@@ -30,9 +35,10 @@ const printBatchButton = document.getElementById("printBatch") as HTMLButtonElem
 const batchPreviewDiv = document.getElementById("batchPreview") as HTMLDivElement;
 const clearBatchButton = document.getElementById("clearBatch") as HTMLButtonElement;
 
+searchBassProButton.addEventListener("click", searchBassPro);
+fillFromInfoButton.addEventListener("click", fillFromInfo);
 createButton.addEventListener("click", createSign);
 printButton.addEventListener("click", print);
-fillInfoButton.addEventListener("click", fillFromInfo);
 saveToBatchButton.addEventListener("click", saveToBatch);
 clearBatchButton.addEventListener("click", clearBatch);
 printBatchButton.addEventListener("click", printBatch);
@@ -64,6 +70,7 @@ document.addEventListener("keydown", (event) => {
 
 export type SignInfo = {
     type: string;
+    mirror: boolean;
     title1: string;
     title2: string;
     extras: string;
@@ -82,29 +89,62 @@ type Batch = {
 
 // State
 const batches: Batch[] = [];
+let lastFetchedProduct: BassProProduct | null = null;
 let lastCreatedSign: {
     type: string | null;
     canvas: HTMLCanvasElement | null;
 } = { type: null, canvas: null };
 
-async function fillFromInfo() {
-    const clipboardContents = await navigator.clipboard.readText();
-    // Expecting clipboard contents in the format: Title1^SKU^Price^RegPrice (RegPrice is optional)
-    const splitContents = clipboardContents.split("^");
-    if (splitContents.length > 2) {
-        title1Input.value = splitContents[0];
-        skuInput.value = splitContents[1];
-        priceInput.value = splitContents[2];
+async function searchBassPro() {
+    try {
+        const res = await fetch(`/api/basspro/product?partNumber=${encodeURIComponent(searchBassProInput.value)}`);
 
-        if (splitContents.length > 3) {
-            regPriceInput.value = splitContents[3];
-        } else {
-            regPriceInput.value = "";
+        if (!res.ok) {
+            alert("Could not find product");
+            throw new Error(`Request failed: ${res.status}`);
         }
 
-        title2Input.value = "";
+        const data: BassProProduct = await res.json();
+        lastFetchedProduct = data;
+        formSearchResults.style.display = "flex";
+        renderProductCard(data, bassProResults);
+    } catch (err) {
+        console.error("Failed to fetch:", err);
+    }
+}
+
+async function fillFromInfo() {
+    if (!lastFetchedProduct) {
+        alert("No product loaded. Search for a product first.");
+        return;
+    }
+
+    const data = lastFetchedProduct;
+
+    // SKU
+    skuInput.value = data.sku;
+
+    // Price: if on sale, sale price goes in price and regular price goes in reg. price
+    if (data.onSale && data.regularPrice !== data.salePrice) {
+        priceInput.value = data.salePrice.toFixed(2);
+        regPriceInput.value = data.regularPrice.toFixed(2);
     } else {
-        alert("Info Error");
+        priceInput.value = data.salePrice.toFixed(2);
+        regPriceInput.value = "";
+    }
+
+    // Title: if title2 is visible, split brand into title1 and stripped title into title2
+    const title2Visible = formTitle2.style.display !== "none";
+    if (title2Visible) {
+        title1Input.value = data.brand;
+        let title = data.title;
+        if (title.toLowerCase().startsWith(data.brand.toLowerCase())) {
+            title = title.slice(data.brand.length).trimStart();
+        }
+        title2Input.value = title;
+    } else {
+        title1Input.value = data.title;
+        title2Input.value = "";
     }
 }
 
@@ -144,6 +184,7 @@ function getSignInfo(): SignInfo {
 
     return {
         type: typesSelect.value,
+        mirror: mirrorCheckbox.checked,
         title1: title1Input.value,
         title2: title2Input.value,
         extras: extrasInput.value,
@@ -160,13 +201,9 @@ async function createSign() {
     lastCreatedSign = { type: null, canvas: null };
     const signInfo = getSignInfo();
 
-    let signCanvas: HTMLCanvasElement = await createSignCanvas(signInfo);
+    const signCanvas: HTMLCanvasElement = await createSignCanvas(signInfo);
 
     if (signCanvas) {
-        if (mirrorCheckbox.checked && signConfigs[signInfo.type].allowMirror !== false) {
-            signCanvas = mirrorCanvas(signCanvas, signConfigs[signInfo.type].mirrorDirection || "vertical");
-            signCanvas.className = "signCanvas";
-        }
         lastCreatedSign = { type: signInfo.type, canvas: signCanvas };
 
         const scaleFactor = signConfigs[signInfo.type].previewScale || 1;

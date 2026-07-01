@@ -1,5 +1,5 @@
 import JsBarcode from "jsbarcode";
-import { createHiDPICanvas, xToPx } from "./canvas-utils.ts";
+import { createHiDPICanvas, mirrorCanvas, xToPx } from "./canvas-utils.ts";
 import { SignInfo } from "./main.ts";
 import { signConfigs, SignConfig } from "./sign-configs.ts";
 
@@ -15,7 +15,7 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
     const canvasWidth = xToPx(config.width);
     const canvasHeight = xToPx(config.height);
 
-    const c = createHiDPICanvas(canvasWidth, canvasHeight);
+    let c = createHiDPICanvas(canvasWidth, canvasHeight);
 
     const ctx = c.getContext("2d") as CanvasRenderingContext2D;
 
@@ -182,6 +182,10 @@ export async function createSignCanvas(signInfo: SignInfo): Promise<HTMLCanvasEl
                 : xToPx(config.regPrice.x) - ctx.measureText("Reg. $" + signInfo.regPrice).width / 2,
             xToPx(config.regPrice.y),
         );
+    }
+
+    if (signInfo.mirror && signConfigs[signInfo.type].allowMirror !== false) {
+        c = mirrorCanvas(c, signConfigs[signInfo.type].mirrorDirection || "vertical");
     }
 
     c.className = "signCanvas";

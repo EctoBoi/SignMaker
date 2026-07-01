@@ -38,7 +38,6 @@ export function mirrorCanvas(originalCanvas: HTMLCanvasElement, direction: "hori
         ctx.scale(-1, -1);
         ctx.drawImage(originalCanvas, 0, 0);
     } else if (direction === "horizontal") {
-        console.log("mirroring horizontally");
         ctx.translate(originalCanvas.width, 0);
         ctx.drawImage(originalCanvas, 0, 0);
     }
